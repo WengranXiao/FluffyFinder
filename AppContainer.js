@@ -7,6 +7,7 @@ import AuthScreen from "./screens/AuthScreen";
 import HomeScreen from "./screens/HomeScreen";
 import MapScreen from "./screens/MapScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import PostDetailScreen from "./screens/PostDetailScreen";
 
 export default function AppContainer() {
   // Create the stack and tab navigator
@@ -19,6 +20,7 @@ export default function AppContainer() {
     return (
       <HomeStack.Navigator screenOptions={{ headerShown: false }}>
         <HomeStack.Screen name="Home" component={HomeScreen} />
+        <HomeStack.Screen name="PostDetail" component={PostDetailScreen} />
       </HomeStack.Navigator>
     );
   }
