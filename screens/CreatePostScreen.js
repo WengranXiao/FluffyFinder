@@ -33,7 +33,7 @@ function CreatePostScreen (props) {
       Create Post
       </Text>
       <DropDownPicker
-        style={styles.input}
+        style={styles.dropDown}
         open={typeDropdownOpen}
         value={typeValue}
         items={types}
@@ -42,6 +42,15 @@ function CreatePostScreen (props) {
         setItems={setTypes}
         placeholder={'Choose your post type'}
       />
+      <Text>Lost/Found Time</Text>
+      <DateTimePicker
+        value={time}
+        mode="datetime"
+        onChange={(event, selectedDate) => {
+          const currentDate = selectedDate || time;
+          setTime(currentDate);
+        }}
+        />
       <TextInput
         style={styles.input}
         onChangeText={(text)=>setBreed(text)}
@@ -60,19 +69,12 @@ function CreatePostScreen (props) {
         value={description}
         placeholder="Description"
       />
-      <Text>Lost/Found Time</Text>
-      <DateTimePicker
-        value={time}
-        mode="datetime"
-        onChange={(event, selectedDate) => {
-          const currentDate = selectedDate || time;
-          setTime(currentDate);
-        }}
-        />
+      <Text>Lost/Found Location</Text>
+
       <GooglePlacesAutocomplete
         placeholder='Search Location'
         onPress={(data, details = null) => {
-          console.log(data.description);
+          // console.log(data.description);
           // console.log(details.geometry.location);
           setLocation(data.description);
           // setGeopoint(details.geometry.location);
@@ -102,12 +104,14 @@ function CreatePostScreen (props) {
       <View style={styles.buttonContainer}>
         <Button
           title='Cancel'
+          color='#3D7D6C'
           onPress={()=>{
             navigation.navigate('Home');
           }}
         />
         <Button
           title='Save'
+          color='#3D7D6C'
           onPress={()=>{            
             dispatch(addPost(breed, typeValue, location,time, species, description));
             navigation.navigate('Home');      
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
   },
@@ -141,12 +145,16 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   buttonContainer: {
-    flex: 0.1,
+    flex: 0.2,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     width: '80%',
-    margin: 20,
+  },
+  dropDown: {
+    width: '80%',
+    height: 40,
+    margin: 10,
   },
   
 });

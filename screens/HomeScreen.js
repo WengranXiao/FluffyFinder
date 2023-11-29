@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, Button, FlatList, Image } from "react-native";
+import { StyleSheet, Text, View, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { loadPosts, loadUserInfo } from "../data/Actions";
-
+import {  Button } from '@rneui/themed';
 const HomeScreen = (props) => {
   const { navigation, route } = props;
   const posts = useSelector((state) => state.posts);
@@ -27,10 +27,10 @@ const HomeScreen = (props) => {
             <View style={styles.postTextContainer}>
               <Text>{item.breed}</Text> 
               <Text>{new Date(item.postTime.seconds * 1000).toLocaleString()}</Text>
-  
               <Text>{item.location}</Text>  
               <Text>{item.description}</Text>
               <Button 
+                color='#3D7D6C'
                 title="See Detail" 
                 onPress={() => {navigation.navigate('PostDetail',{key: item.key})}}  
               />
@@ -39,9 +39,10 @@ const HomeScreen = (props) => {
         )}
       />
       <Button
+        style={styles.createPostButton}
+        color="#3D7D6C"
         title= "Create Post"
         onPress={() => navigation.navigate('CreatePost')}
-
       />
     </SafeAreaView>
   );
@@ -59,6 +60,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "flex-start",
+  },
+  createPostButton: {
+    width: '40%',
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    margin: 20,
   },
 });
 
