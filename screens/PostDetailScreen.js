@@ -1,19 +1,19 @@
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { loadLostPosts } from "../data/Actions";
+import { loadPosts } from "../data/Actions";
 import { Button, Icon } from '@rneui/themed';
 
 
 function PostDetailScreen(props) {
   const { navigation, route } = props;
   const { key } = route.params;
-  const lostPosts = useSelector((state) => state.lostPosts);
-  const selectedPost = lostPosts.find(item=>(item.key===key));
+  const posts = useSelector((state) => state.posts);
+  const selectedPost = posts.find(item=>(item.key===key));
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    dispatch(loadLostPosts());
+    dispatch(loadPosts());
   }, []);
 
   return (
@@ -40,12 +40,14 @@ function PostDetailScreen(props) {
       <View>
         <Text style={styles.titleText}>Breed</Text>
         <Text style={styles.infoText}>{selectedPost.breed}</Text>
-        <Text style={styles.titleText}>Color</Text>
-        <Text style={styles.infoText}>{selectedPost.color}</Text>
+        <Text style={styles.titleText}>Species</Text>
+        <Text style={styles.infoText}>{selectedPost.species}</Text>
         <Text style={styles.titleText}>Lost Time</Text>
-        <Text style={styles.infoText}>{selectedPost.time}</Text>
+        <Text style={styles.infoText}>{new Date(selectedPost.postTime.seconds * 1000).toLocaleString()}</Text>
         <Text style={styles.titleText}>Lost Location</Text>
         <Text style={styles.infoText}>{selectedPost.location}</Text>
+        <Text style={styles.titleText}>Description</Text>
+        <Text style={styles.infoText}>{selectedPost.description}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <Button style={styles.commentButton} title='Comment' onPress={() => {}} />

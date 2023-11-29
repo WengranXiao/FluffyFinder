@@ -2,42 +2,46 @@ import { StyleSheet, Text, View, Button, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { loadLostPosts, loadUserInfo } from "../data/Actions";
+import { loadPosts, loadUserInfo } from "../data/Actions";
 
 const HomeScreen = (props) => {
   const { navigation, route } = props;
-  const lostPosts = useSelector((state) => state.lostPosts);
+  const posts = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(loadLostPosts());
+  useEffect(()=>{
+    dispatch(loadPosts());
   }, []);
 
   return (
     <SafeAreaView>
-      <Text>Home</Text>
-      <FlatList
-        data={lostPosts}
-        renderItem={({ item }) => (
+
+      <FlatList 
+        data={posts}
+        renderItem={({item}) => (
           <View style={styles.postContainer}>
             <Image
               style={{ width: "40%", height: "80%" }}
               source={require("../sampleCatImage.jpg")}
             />
             <View style={styles.postTextContainer}>
-              <Text>{item.name}</Text>
-              <Text>{item.breed}</Text>
-              <Text>{item.time}</Text>
-              <Text>{item.location}</Text>
-              <Button
-                title="See Detail"
-                onPress={() => {
-                  navigation.navigate("PostDetail", { key: item.key });
-                }}
+              <Text>{item.breed}</Text> 
+              <Text>{new Date(item.postTime.seconds * 1000).toLocaleString()}</Text>
+  
+              <Text>{item.location}</Text>  
+              <Text>{item.description}</Text>
+              <Button 
+                title="See Detail" 
+                onPress={() => {navigation.navigate('PostDetail',{key: item.key})}}  
               />
-            </View>
+            </View>           
           </View>
         )}
+      />
+      <Button
+        title= "Create Post"
+        onPress={() => navigation.navigate('CreatePost')}
+
       />
     </SafeAreaView>
   );

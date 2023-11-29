@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from "../Secrets";
-import { LOAD_LOST_POSTS, LOAD_USER_INFO } from "./Reducer";
+import { LOAD_POSTS, ADD_POST, LOAD_USER_INFO } from "./Reducer";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -87,21 +87,27 @@ const saveProfilePic = (pictureObject) => {
 
 const loadLostPosts = () => {
   return async (dispatch) => {
-    let q = query(collection(db, "LostPosts"));
+    let q = query(collection(db, "PostList") );
     onSnapshot(q, (querySnapshot) => {
-      let newLostPosts = querySnapshot.docs.map((docSnap) => ({
+      let newPosts = querySnapshot.docs.map((docSnap) => ({
         ...docSnap.data(),
-        key: docSnap.id,
+        // key: docSnap.id,
       }));
 
       dispatch({
-        type: LOAD_LOST_POSTS,
+        type: LOAD_POSTS,
         payload: {
-          newLostPosts: newLostPosts,
+          newPosts: newPosts,
         },
       });
     });
   };
 };
 
-export { addUser, updateUser, saveProfilePic, loadLostPosts, loadUserInfo };
+
+const addPost = (breed,typeValue, location, time, species, description) => {
+  return async (dispatch) => {
+    const docRef = await addDoc(collection(db, 'PostList'), {breed: breed, key: Math.random(), species: species, description: description, postTime: time, location: location, type: typeValue});
+  }
+}
+export { addUser, updateUser, saveProfilePic, loadPosts, addPost, loadUserInfo };
