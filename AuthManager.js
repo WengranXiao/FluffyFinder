@@ -11,6 +11,7 @@ import {
 import { getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "./Secrets";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { loadUserInfo } from "./data/Actions";
 
 let app, auth;
 // this guards against initializing more than one "App"
@@ -37,9 +38,8 @@ const signOut = async () => {
   await fbSignOut(auth);
 };
 
-const signUp = async (displayName, email, password, navigation) => {
+const signUp = async (displayName, email, password) => {
   const userCred = await createUserWithEmailAndPassword(auth, email, password);
-  await updateProfile(userCred.user, { displayName: displayName });
   return userCred.user;
 };
 
@@ -49,12 +49,13 @@ const getAuthUser = () => {
 
 let unsubscribeFromAuthChanges = undefined;
 
-const subscribeToAuthChanges = (navigation) => {
+const subscribeToAuthChanges = (navigation, dispatch) => {
   if (unsubscribeFromAuthChanges) {
     unsubscribeFromAuthChanges();
   }
-  unsubscribeFromAuthChanges = onAuthStateChanged(auth, (user) => {
-    if (user) {
+  unsubscribeFromAuthChanges = onAuthStateChanged(auth, (authUser) => {
+    if (authUser?.displayName) {
+      dispatch(loadUserInfo(authUser));
       navigation.navigate("Main");
     } else {
       navigation.navigate("Login", { loginMode: true });

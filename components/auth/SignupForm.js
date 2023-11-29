@@ -7,18 +7,24 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { signUp } from "../../AuthManager";
-import { addUser } from "../../data/Actions";
+import { updateProfile } from "firebase/auth";
+import { Icon } from "@rneui/themed";
+import { signUp, getAuthUser } from "../../AuthManager";
+import { addUser, updateUser, saveProfilePic } from "../../data/Actions";
 import { useDispatch } from "react-redux";
+import PhotoUpload from "../PhotoUpload";
 
-const SignupForm = ({ toggleLoginMode }) => {
-  const [displayName, setDisplayName] = useState("");
+const SignupForm = ({ toggleLoginMode, navigation }) => {
+  const [step, setStep] = useState(0); // 0: email & password, 1: profile pic, display name & contact info
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [profilePicUrl, setProfilePicUrl] = useState(null);
+  const [displayName, setDisplayName] = useState("");
+  const [phone, setPhone] = useState("");
   const dispatch = useDispatch();
 
-  const handleSignup = async () => {
+  const handleCreateAuth = async () => {
     if (!email || !password || !confirmPassword) {
       Alert.alert("Empty Field", "Please fill in all fields");
       return;
@@ -35,10 +41,9 @@ const SignupForm = ({ toggleLoginMode }) => {
     try {
       const newUser = await signUp(displayName, email, password);
       dispatch(addUser(newUser));
-      setEmail("");
       setPassword("");
       setConfirmPassword("");
-      setDisplayName("");
+      setStep(1);
     } catch (error) {
       switch (error.code) {
         case "auth/invalid-email":
@@ -57,47 +62,146 @@ const SignupForm = ({ toggleLoginMode }) => {
     }
   };
 
+  const handleUpdateProfile = async () => {
+    if (!displayName || (!email && !phone)) {
+      Alert.alert("Empty Field", "Please fill in all fields");
+      return;
+    }
+
+    try {
+      const currentUser = await getAuthUser();
+      if (profilePicUrl) {
+        dispatch(saveProfilePic({ uri: profilePicUrl }));
+      }
+      await updateProfile(currentUser, { displayName });
+
+      dispatch(
+        updateUser(currentUser, {
+          displayName: displayName,
+          contactEmail: email || null,
+          contactPhone: phone || null,
+          profilePicUrl: profilePicUrl || null,
+        })
+      );
+      setDisplayName("");
+      setEmail("");
+      setPhone("");
+      setProfilePicUrl(null);
+      setStep(0);
+      toggleLoginMode();
+      navigation.navigate("Main");
+    } catch (error) {
+      Alert.alert("Update Profile Error", error.message, [{ text: "OK" }]);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Name</Text>
-      <TextInput
-        value={displayName}
-        onChangeText={setDisplayName}
-        placeholder="Enter your name"
-        autoCapitalize="none"
-        style={styles.input}
-      />
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Enter your email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={styles.input}
-      />
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Enter your password"
-        secureTextEntry
-        style={styles.input}
-      />
-      <Text style={styles.label}>Confirm Password</Text>
-      <TextInput
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        placeholder="Confirm your password"
-        secureTextEntry
-        style={styles.input}
-      />
-      <TouchableOpacity onPress={handleSignup} style={styles.button}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={toggleLoginMode}>
-        <Text style={styles.loginText}>Already have an account? Log in</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>Sign Up</Text>
+      {step === 0 && (
+        <>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Enter your email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={styles.input}
+            placeholderTextColor="#A0C7B5"
+          />
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Enter your password"
+            secureTextEntry
+            style={styles.input}
+            placeholderTextColor="#A0C7B5"
+          />
+          <Text style={styles.label}>Confirm Password</Text>
+          <TextInput
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Confirm your password"
+            secureTextEntry
+            style={styles.input}
+            placeholderTextColor="#A0C7B5"
+          />
+
+          <TouchableOpacity onPress={handleCreateAuth} style={styles.button}>
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={toggleLoginMode}
+            style={{ flexDirection: "row", gap: 5 }}
+          >
+            <Text style={styles.signinText}>Already have an account?</Text>
+            <Text style={styles.signin}>Sign In</Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      {step === 1 && (
+        <>
+          <Text style={styles.label}>Profile Pic (Optional)</Text>
+          <PhotoUpload
+            profilePicUrl={profilePicUrl}
+            setProfilePicUrl={setProfilePicUrl}
+          />
+          <View style={styles.break} />
+          <Text style={styles.label}>* Your Name</Text>
+          <TextInput
+            value={displayName}
+            onChangeText={setDisplayName}
+            placeholder="Enter your nick name"
+            autoCapitalize="none"
+            style={styles.input}
+            placeholderTextColor="#A0C7B5"
+          />
+
+          <Text style={styles.label}>* Contact (At least one)</Text>
+          <View
+            style={{ ...styles.input, flexDirection: "row", marginBottom: 0 }}
+          >
+            <Icon name="email" type="zocial" size={16} color="#3D7D6C" />
+            <TextInput
+              underlineColorAndroid="transparent"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Enter your email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              placeholderTextColor="#A0C7B5"
+              style={{ fontSize: 18, marginLeft: 10 }}
+            />
+          </View>
+          <TextInput />
+
+          <View style={{ ...styles.input, flexDirection: "row" }}>
+            <Icon
+              name="phone-alt"
+              type="font-awesome-5"
+              size={16}
+              color="#3D7D6C"
+            />
+            <TextInput
+              keyboardType="number-pad"
+              underlineColorAndroid="transparent"
+              value={phone}
+              onChangeText={setPhone}
+              placeholder="Enter your phone number"
+              autoCapitalize="none"
+              placeholderTextColor="#A0C7B5"
+              style={{ fontSize: 18, marginLeft: 10 }}
+            />
+          </View>
+
+          <TouchableOpacity onPress={handleUpdateProfile} style={styles.button}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
@@ -106,32 +210,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: "10%",
+    paddingTop: "3%",
     paddingHorizontal: "10%",
     width: "100%",
   },
+  break: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#CCCCCC",
+    marginVertical: 20,
+  },
+  title: {
+    color: "#000",
+    fontSize: 24,
+    fontStyle: "normal",
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
   label: {
     alignSelf: "flex-start",
-    marginVertical: 5,
+    marginBottom: 10,
     fontSize: 18,
     fontWeight: "bold",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#4D4D4D",
     borderRadius: 5,
     padding: 10,
     width: "100%",
     height: 40,
-    marginBottom: 10,
+    marginBottom: 25,
     fontSize: 18,
   },
   button: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "#3D7D6C",
+    padding: 15,
+    borderRadius: 10,
     width: "100%",
-    height: 40,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
@@ -141,10 +257,26 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  loginText: {
+  signinText: {
     marginTop: 24,
     fontSize: 16,
-    color: "#007bff",
+    color: "#000",
+  },
+  signin: {
+    marginTop: 24,
+    fontSize: 16,
+    color: "#3D7D6C",
+    fontWeight: "bold",
+  },
+  uploadPic: {
+    height: 120,
+    width: 120,
+    borderWidth: 1,
+    borderColor: "#4D4D4D",
+    borderRadius: 60,
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

@@ -36,12 +36,14 @@ const SigninForm = ({ toggleLoginMode }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Sign In</Text>
       <Text style={styles.label}>Email</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter your email"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor="#A0C7B5"
       />
       <Text style={styles.label}>Password</Text>
       <TextInput
@@ -50,17 +52,18 @@ const SigninForm = ({ toggleLoginMode }) => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        placeholderTextColor="#A0C7B5"
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={toggleLoginMode}>
-        <Text style={styles.signupText}>Don't have an account? Sign up</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity>
-        <Text style={styles.forgotPW}>Forgot Password?</Text>
+      <TouchableOpacity
+        onPress={toggleLoginMode}
+        style={{ flexDirection: "row", gap: 5 }}
+      >
+        <Text style={styles.signupText}>Don't have an account?</Text>
+        <Text style={styles.signup}>Sign up</Text>
       </TouchableOpacity>
     </View>
   );
@@ -70,32 +73,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: "10%",
+    paddingTop: "3%",
     paddingHorizontal: "10%",
     width: "100%",
   },
+  title: {
+    color: "#000",
+    fontSize: 24,
+    fontStyle: "normal",
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
   label: {
     alignSelf: "flex-start",
-    marginVertical: 5,
+    marginBottom: 10,
     fontSize: 18,
     fontWeight: "bold",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#4D4D4D",
     borderRadius: 5,
     padding: 10,
     width: "100%",
     height: 40,
-    marginBottom: 10,
+    marginBottom: 25,
     fontSize: 18,
   },
   button: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "#3D7D6C",
+    padding: 15,
+    borderRadius: 10,
     width: "100%",
-    height: 40,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
@@ -108,12 +117,13 @@ const styles = StyleSheet.create({
   signupText: {
     marginTop: 24,
     fontSize: 16,
-    color: "#007bff",
+    color: "#000",
   },
-  forgotPW: {
+  signup: {
     marginTop: 24,
     fontSize: 16,
-    color: "#007bff",
+    color: "#3D7D6C",
+    fontWeight: "bold",
   },
 });
 

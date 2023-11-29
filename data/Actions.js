@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import {
   setDoc,
-  addDoc,
+  updateDoc,
+  getDoc,
   query,
   where,
   orderBy,
@@ -11,16 +12,17 @@ import {
   collection,
   onSnapshot,
 } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from "../Secrets";
-import { LOAD_LOST_POSTS } from "./Reducer";
+import { LOAD_LOST_POSTS, LOAD_USER_INFO } from "./Reducer";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 const addUser = (user) => {
   return async (dispatch) => {
     userToAdd = {
-      displayName: user.displayName,
       email: user.email,
       key: user.uid,
     };
@@ -28,9 +30,64 @@ const addUser = (user) => {
   };
 };
 
+const loadUserInfo = (authUser) => {
+  return async (dispatch) => {
+    const userSnap = await getDoc(doc(db, "users", authUser.uid));
+    const user = userSnap.data();
+    console.log("dispatching with user", authUser, user);
+    dispatch({
+      type: LOAD_USER_INFO,
+      payload: { user },
+    });
+  };
+};
+
+const updateUser = (user, updateInfo) => {
+  const { displayName, contactEmail, contactPhone, profilePicUrl } = updateInfo;
+  return async (dispatch) => {
+    await updateDoc(doc(db, "users", user.uid), {
+      displayName,
+      contactEmail,
+      contactPhone,
+      profilePicUrl,
+    });
+  };
+};
+
+const saveProfilePic = (pictureObject) => {
+  return async (dispatch, getState) => {
+    const fileName = pictureObject.uri.split("/").pop();
+    // this will be where we store the file in the cloud
+    const currentPhotoRef = ref(storage, `images/${fileName}`);
+
+    try {
+      // fetch the image object (blob) from the local filesystem
+      const response = await fetch(pictureObject.uri);
+
+      // blob: binary large object
+      const imageBlob = await response.blob();
+
+      // then upload it to Firebase Storage
+      await uploadBytes(currentPhotoRef, imageBlob);
+
+      // get the URL
+      const downloadURL = await getDownloadURL(currentPhotoRef);
+
+      // create or add to the user's gallery
+      const currentUser = getState().currentUser;
+      return {
+        ...pictureObject,
+        uri: downloadURL,
+      };
+    } catch (e) {
+      console.log("Error saving picture:", e);
+    }
+  };
+};
+
 const loadLostPosts = () => {
   return async (dispatch) => {
-    let q = query(collection(db, "LostPosts") );
+    let q = query(collection(db, "LostPosts"));
     onSnapshot(q, (querySnapshot) => {
       let newLostPosts = querySnapshot.docs.map((docSnap) => ({
         ...docSnap.data(),
@@ -45,5 +102,6 @@ const loadLostPosts = () => {
       });
     });
   };
-}
-export { addUser, loadLostPosts };
+};
+
+export { addUser, updateUser, saveProfilePic, loadLostPosts, loadUserInfo };
