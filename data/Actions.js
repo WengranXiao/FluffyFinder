@@ -85,7 +85,7 @@ const saveProfilePic = (pictureObject) => {
   };
 };
 
-const loadLostPosts = () => {
+const loadPosts = () => {
   return async (dispatch) => {
     let q = query(collection(db, "PostList") );
     onSnapshot(q, (querySnapshot) => {
