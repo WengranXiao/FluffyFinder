@@ -4,7 +4,12 @@ import Swiper from "react-native-swiper";
 
 const ImageSwiper = ({ images }) => {
   return (
-    <Swiper autoplay={false} activeDotColor="#3D7D6C" dotColor="#eee">
+    <Swiper
+      autoplay={false}
+      loop={false}
+      activeDotColor="#3D7D6C"
+      dotColor="#eee"
+    >
       {images.map((image, index) => (
         <View key={index} style={styles.slide}>
           <Image source={{ uri: image }} style={styles.image} />

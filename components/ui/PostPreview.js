@@ -7,27 +7,21 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Icon } from "@rneui/themed";
-import { useSelector, useDispatch } from "react-redux";
 import ImageSwiper from "./ImageSwiper";
 
-const PostPreview = ({ navigation }) => {
-  const posts = useSelector((state) => state.posts);
-
+const PostPreview = ({ posts, navigation }) => {
   return (
     <FlatList
       width="100%"
-      style={{ width: "100%" }}
       contentContainerStyle={{
         alignItems: "center",
         width: "100%",
+        paddingHorizontal: 6,
       }}
       showsVerticalScrollIndicator={false}
       data={posts}
       renderItem={({ item }) => (
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => navigation.navigate("PostDetail", { key: item.key })}
-        >
+        <View style={styles.card}>
           <View
             style={{
               height: 300,
@@ -38,15 +32,18 @@ const PostPreview = ({ navigation }) => {
           >
             <ImageSwiper
               images={[
-                "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGhvdG98ZW58MHx8MHx8fDA%3D",
-                "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGhvdG98ZW58MHx8MHx8fDA%3D",
+                "https://headsupfortails.com/cdn/shop/articles/cat_sleeping_with_toy_large.jpg?v=1645094444",
+                "https://static01.nyt.com/images/2021/11/23/business/00cutecats-disinfo-promo/00cutecats-disinfo-promo-mediumSquareAt3X.png",
               ]}
             />
           </View>
-          <View style={styles.cardInfo}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PostDetail", { key: item.key })}
+            style={styles.cardInfo}
+          >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.title}>Breed</Text>
-              <Text style={styles.titleSuffix}> • Male</Text>
+              <Text style={styles.title}>{item.species}</Text>
+              <Text style={styles.titleSuffix}> • {item.breed}</Text>
             </View>
             <View style={styles.infoRow}>
               <Icon
@@ -66,7 +63,7 @@ const PostPreview = ({ navigation }) => {
                 color="#3D7D6C"
               />
               <Text style={styles.infoText}>
-                {new Date(item.postTime.seconds * 1000).toLocaleString()}
+                {new Date(item.postTime).toLocaleString()}
               </Text>
             </View>
             <View style={styles.infoRow}>
@@ -84,8 +81,8 @@ const PostPreview = ({ navigation }) => {
                 {item.description}
               </Text>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       )}
     />
   );
@@ -93,7 +90,7 @@ const PostPreview = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: "90%",
+    width: "100%",
     borderRadius: 10,
     backgroundColor: "#fff",
     marginBottom: 15,
@@ -104,12 +101,12 @@ const styles = StyleSheet.create({
     elevation: 20, // only affects Android
   },
   cardInfo: {
-    width: "100%",
+    flex: 1,
     padding: 16,
+    paddingBottom: 26,
     backgroundColor: "white",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    marginBottom: 10,
   },
   title: {
     fontWeight: "bold",

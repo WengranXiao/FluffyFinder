@@ -3,14 +3,14 @@ const LOAD_USER_INFO = "LOAD_USER_INFO";
 const ADD_POST = "ADD_POST";
 
 const initialState = {
-  users: [],
+  user: [],
   posts: [],
 };
 
-const loadPosts = (state, items) => { 
+const loadPosts = (state, items) => {
   return {
     ...state,
-    posts: [...items],
+    posts: items,
   };
 };
 
@@ -21,7 +21,16 @@ const loadUserInfo = (state, user) => {
   };
 };
 
-const addPost = (state, breed,time,typeValue, location,species, description, key) => {
+const addPost = (
+  state,
+  breed,
+  time,
+  typeValue,
+  location,
+  species,
+  description,
+  key
+) => {
   let { listItems } = state;
   let newListItems = listItems.concat({
     key: key,
@@ -33,10 +42,10 @@ const addPost = (state, breed,time,typeValue, location,species, description, key
     type: typeValue,
   });
   return {
-    ...state, 
-    listItems: newListItems
+    ...state,
+    listItems: newListItems,
   };
-}
+};
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -46,7 +55,16 @@ function rootReducer(state = initialState, action) {
     case LOAD_USER_INFO:
       return loadUserInfo(state, payload.user);
     case ADD_POST:
-      return addPost(state, payload.postTime, payload.location,payload.breed, payload.typeValue,payload.species,payload.description, payload.key);
+      return addPost(
+        state,
+        payload.postTime,
+        payload.location,
+        payload.breed,
+        payload.typeValue,
+        payload.species,
+        payload.description,
+        payload.key
+      );
 
     default:
       return state;

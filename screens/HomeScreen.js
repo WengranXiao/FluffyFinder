@@ -5,11 +5,13 @@ import {
   FlatList,
   Image,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
+import { Button, Icon } from "@rneui/themed";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { loadPosts, loadUserInfo } from "../data/Actions";
-import { Button } from "@rneui/themed";
 import PostPreview from "../components/ui/PostPreview";
 
 const HomeScreen = (props) => {
@@ -22,63 +24,42 @@ const HomeScreen = (props) => {
   }, []);
 
   return (
-    <SafeAreaView>
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => (
-          <View style={styles.postContainer}>
-            <Image
-              style={{ width: "40%", height: "80%" }}
-              source={require("../sampleCatImage.jpg")}
-            />
-            <View style={styles.postTextContainer}>
-              <Text>{item.breed}</Text>
-              <Text>
-                {new Date(item.postTime.seconds * 1000).toLocaleString()}
-              </Text>
-              <Text>{item.location}</Text>
-              <Text>{item.description}</Text>
-              <Button
-                color="#3D7D6C"
-                title="See Detail"
-                onPress={() => {
-                  navigation.navigate("PostDetail", { key: item.key });
-                }}
-              />
-            </View>
-          </View>
-        )}
-      />
-      <Button
-        style={styles.createPostButton}
-        color="#3D7D6C"
-        title="Create Post"
-        onPress={() => navigation.navigate("CreatePost")}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <PostPreview navigation={navigation} posts={posts} />
+        <TouchableOpacity
+          style={styles.createPostButton}
+          onPress={() => navigation.navigate("CreatePost")}
+        >
+          <Icon name="plus" type="font-awesome" color="#fff" />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
-  postContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  container: {
+    paddingHorizontal: "5%",
+    justifyContent: "flex-start",
     alignItems: "center",
-    padding: 10,
-    backgroundColor: "white",
-    height: 180,
-  },
-  postTextContainer: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
+    width: "100%",
+    height: "100%",
   },
   createPostButton: {
-    width: "40%",
-    height: 50,
+    position: "absolute",
+    right: 25,
+    bottom: 16,
+    width: 54,
+    height: 54,
+    borderRadius: 7,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
-    margin: 20,
+    backgroundColor: "#3D7D6C",
+    shadowColor: "#3D7D6C",
+    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 20, // only affects Android
   },
 });
 

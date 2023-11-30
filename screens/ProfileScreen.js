@@ -17,6 +17,7 @@ import PostPreview from "../components/ui/PostPreview";
 const ProfileScreen = ({ navigation, route }) => {
   const [tab, setTab] = useState(0);
   const userInfo = useSelector((state) => state.user);
+  const posts = useSelector((state) => state.posts);
 
   const tabs = route?.params?.otherUser
     ? ["Pet Lost", "Pet Found"]
@@ -103,7 +104,6 @@ const ProfileScreen = ({ navigation, route }) => {
                 size={22}
                 color="#3D7D6C"
               />
-              {console.log(userInfo)}
               <Text style={{ fontSize: 16 }}>{userInfo.contactPhone}</Text>
               <TouchableOpacity
                 onPress={() => {}}
@@ -155,9 +155,9 @@ const ProfileScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             ))}
           </View>
-          <PostPreview navigation={navigation} />
+          <PostPreview navigation={navigation} posts={posts} />
         </View>
-        {/* 
+
         <Button
           onPress={async () => {
             try {
@@ -168,7 +168,7 @@ const ProfileScreen = ({ navigation, route }) => {
           }}
         >
           Now sign out!
-        </Button> */}
+        </Button>
       </View>
     </SafeAreaView>
   );
@@ -203,7 +203,6 @@ const styles = StyleSheet.create({
   postSection: {
     flex: 1,
     width: "100%",
-    justifyContent: "flex-start",
     alignItems: "center",
     gap: 20,
   },
