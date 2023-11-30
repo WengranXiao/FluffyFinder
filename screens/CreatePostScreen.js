@@ -1,16 +1,23 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, ScrollView, FlatList, TextInput } from "react-native";
-import { CheckBox } from '@rneui/themed';
-import { Input, Button } from '@rneui/themed';
-import { useDispatch, useSelector } from 'react-redux';
-import { Icon } from '@rneui/themed';
-import { addPost } from '../data/Actions';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import DropDownPicker from 'react-native-dropdown-picker';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  TextInput,
+} from "react-native";
+import { CheckBox } from "@rneui/themed";
+import { Input, Button } from "@rneui/themed";
+import { useDispatch, useSelector } from "react-redux";
+import { Icon } from "@rneui/themed";
+import { addPost } from "../data/Actions";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import DropDownPicker from "react-native-dropdown-picker";
 
-function CreatePostScreen (props) {
-  const { navigation} = props;
+function CreatePostScreen(props) {
+  const { navigation } = props;
   const dispatch = useDispatch();
 
   const [breed, setBreed] = useState("");
@@ -23,15 +30,13 @@ function CreatePostScreen (props) {
   const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
   const [typeValue, setTypeValue] = useState(null);
   const [types, setTypes] = useState([
-      {label: 'I lost my pet', value: 'lost'},
-      {label: 'I found an unknown pet', value: 'found'},
+    { label: "I lost my pet", value: "lost" },
+    { label: "I found an unknown pet", value: "found" },
   ]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>
-      Create Post
-      </Text>
+      <Text style={styles.headerText}>Create Post</Text>
       <DropDownPicker
         style={styles.dropDown}
         open={typeDropdownOpen}
@@ -40,7 +45,7 @@ function CreatePostScreen (props) {
         setOpen={setTypeDropdownOpen}
         setValue={setTypeValue}
         setItems={setTypes}
-        placeholder={'Choose your post type'}
+        placeholder={"Choose your post type"}
       />
       <Text>Lost/Found Time</Text>
       <DateTimePicker
@@ -50,29 +55,29 @@ function CreatePostScreen (props) {
           const currentDate = selectedDate || time;
           setTime(currentDate);
         }}
-        />
+      />
       <TextInput
         style={styles.input}
-        onChangeText={(text)=>setBreed(text)}
+        onChangeText={(text) => setBreed(text)}
         value={breed}
         placeholder="Breed"
       />
       <TextInput
         style={styles.input}
-        onChangeText={(text)=>setSpecies(text)}
+        onChangeText={(text) => setSpecies(text)}
         value={species}
         placeholder="Species"
       />
       <TextInput
         style={styles.input}
-        onChangeText={(text)=>setDescription(text)}
+        onChangeText={(text) => setDescription(text)}
         value={description}
         placeholder="Description"
       />
       <Text>Lost/Found Location</Text>
 
       <GooglePlacesAutocomplete
-        placeholder='Search Location'
+        placeholder="Search Location"
         onPress={(data, details = null) => {
           // console.log(data.description);
           // console.log(details.geometry.location);
@@ -80,60 +85,61 @@ function CreatePostScreen (props) {
           // setGeopoint(details.geometry.location);
         }}
         query={{
-          key: 'AIzaSyAsBiGHdUmGB41gkhkVGiBH185EplwLX1c',
-          language: 'en',
+          key: "AIzaSyAsBiGHdUmGB41gkhkVGiBH185EplwLX1c",
+          language: "en",
         }}
         fetchDetails={true}
         styles={{
-          textInputContainer: { 
-            backgroundColor: 'white',
-            width: '80%',
+          textInputContainer: {
+            backgroundColor: "white",
+            width: "80%",
             margin: 12,
           },
           textInput: {
             height: 40,
-            color: 'black',
+            color: "black",
             fontSize: 16,
           },
           listView: {
-            height: '10%',
+            height: "10%",
           },
         }}
       />
 
       <View style={styles.buttonContainer}>
         <Button
-          title='Cancel'
-          color='#3D7D6C'
-          onPress={()=>{
-            navigation.navigate('Home');
+          title="Cancel"
+          color="#3D7D6C"
+          onPress={() => {
+            navigation.navigate("Home");
           }}
         />
         <Button
-          title='Save'
-          color='#3D7D6C'
-          onPress={()=>{            
-            dispatch(addPost(breed, typeValue, location,time, species, description));
-            navigation.navigate('Home');      
+          title="Save"
+          color="#3D7D6C"
+          onPress={() => {
+            dispatch(
+              addPost(breed, typeValue, location, time, species, description)
+            );
+            navigation.navigate("Home");
           }}
         />
-        
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 20,
   },
   headerText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 20,
     marginBottom: 20,
   },
@@ -142,21 +148,20 @@ const styles = StyleSheet.create({
     margin: 10,
     borderWidth: 1,
     padding: 10,
-    width: '80%',
+    width: "80%",
   },
   buttonContainer: {
     flex: 0.2,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: '80%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "80%",
   },
   dropDown: {
-    width: '80%',
+    width: "80%",
     height: 40,
     margin: 10,
   },
-  
 });
 
 export default CreatePostScreen;

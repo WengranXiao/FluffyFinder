@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AuthScreen from "./screens/AuthScreen";
 import HomeScreen from "./screens/HomeScreen";
 import MapScreen from "./screens/MapScreen";
-import SettingsScreen from "./screens/SettingsScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 import PostDetailScreen from "./screens/PostDetailScreen";
 import CreatePostScreen from "./screens/CreatePostScreen";
 
@@ -38,12 +38,13 @@ export default function AppContainer() {
   }
 
   // Function to create the settings stack with its screens
-  function SettingsStackScreen() {
-    const SettingsStack = createNativeStackNavigator();
+  function ProfileStackScreen() {
+    const ProfileStack = createNativeStackNavigator();
     return (
-      <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
-        <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      </SettingsStack.Navigator>
+      <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+        <ProfileStack.Screen name="PostDetail" component={PostDetailScreen} />
+      </ProfileStack.Navigator>
     );
   }
 
@@ -55,7 +56,7 @@ export default function AppContainer() {
       >
         <Tab.Screen name="HomeTab" component={HomeStackScreen} />
         <Tab.Screen name="MapTab" component={MapStackScreen} />
-        <Tab.Screen name="SettingsTab" component={SettingsStackScreen} />
+        <Tab.Screen name="ProfileTab" component={ProfileStackScreen} />
       </Tab.Navigator>
     );
   }

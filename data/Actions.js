@@ -88,7 +88,7 @@ const saveProfilePic = (pictureObject) => {
 
 const loadPosts = () => {
   return async (dispatch) => {
-    let q = query(collection(db, "PostList") );
+    let q = query(collection(db, "PostList"));
     onSnapshot(q, (querySnapshot) => {
       let newPosts = querySnapshot.docs.map((docSnap) => ({
         ...docSnap.data(),
@@ -98,17 +98,36 @@ const loadPosts = () => {
       dispatch({
         type: LOAD_POSTS,
         payload: {
-          newPosts: newPosts,
+          newPosts: newPosts.map((post) => ({
+            ...post,
+            postTime: post.postTime.seconds,
+            reportTime: post.reportTime.seconds,
+            updateTime: post.updateTime.seconds,
+          })),
         },
       });
     });
   };
 };
 
-
-const addPost = (breed,typeValue, location, time, species, description) => {
+const addPost = (breed, typeValue, location, time, species, description) => {
   return async (dispatch) => {
-    const docRef = await addDoc(collection(db, 'PostList'), {breed: breed, key: Math.random(), species: species, description: description, postTime: time, location: location, type: typeValue});
-  }
-}
-export { addUser, updateUser, saveProfilePic, loadPosts, addPost, loadUserInfo };
+    const docRef = await addDoc(collection(db, "PostList"), {
+      breed: breed,
+      key: Math.random(),
+      species: species,
+      description: description,
+      postTime: time,
+      location: location,
+      type: typeValue,
+    });
+  };
+};
+export {
+  addUser,
+  updateUser,
+  saveProfilePic,
+  loadPosts,
+  addPost,
+  loadUserInfo,
+};
