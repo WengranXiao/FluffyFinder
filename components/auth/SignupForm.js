@@ -12,7 +12,7 @@ import { Icon } from "@rneui/themed";
 import { signUp, getAuthUser } from "../../AuthManager";
 import { addUser, updateUser, saveProfilePic } from "../../data/Actions";
 import { useDispatch } from "react-redux";
-import PhotoUpload from "../PhotoUpload";
+import PhotoUpload from "../ui/PhotoUpload";
 
 const SignupForm = ({ toggleLoginMode, navigation }) => {
   const [step, setStep] = useState(0); // 0: email & password, 1: profile pic, display name & contact info
