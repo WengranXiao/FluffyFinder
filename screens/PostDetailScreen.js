@@ -121,7 +121,7 @@ function PostDetailScreen(props) {
         <View style={styles.line} />
 
         <Text style={styles.titleText}>Comments</Text>
-        
+
       </View>
 
       </ScrollView>

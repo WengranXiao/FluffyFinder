@@ -6,6 +6,7 @@ import {
   ScrollView,
   FlatList,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { Input, Button } from "@rneui/themed";
@@ -36,7 +37,18 @@ function CreatePostScreen(props) {
 
   return (
     <View style={styles.container}>
+      <View style={styles.navigationBar}>
+      <Icon
+          name="arrow-left"
+          type="font-awesome"
+          style={styles.gobackIcon}
+          onPress={() => navigation.goBack()}
+        />
       <Text style={styles.headerText}>Create Post</Text>
+      </View>
+      <ScrollView style={styles.scroll} >
+      <View style={styles.formContainer}> 
+      <Text style={styles.titleText}>Post Type</Text> 
       <DropDownPicker
         style={styles.dropDown}
         open={typeDropdownOpen}
@@ -47,7 +59,21 @@ function CreatePostScreen(props) {
         setItems={setTypes}
         placeholder={"Choose your post type"}
       />
-      <Text>Lost/Found Time</Text>
+      <Text style={styles.titleText}>Breed</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setBreed(text)}
+        value={breed}
+        placeholder="Breed"
+      />
+      <Text style={styles.titleText}>Species</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setSpecies(text)}
+        value={species}
+        placeholder="Species"
+      />
+      <Text style={styles.titleText}>Lost/Found Time</Text>
       <DateTimePicker
         value={time}
         mode="datetime"
@@ -56,25 +82,7 @@ function CreatePostScreen(props) {
           setTime(currentDate);
         }}
       />
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setBreed(text)}
-        value={breed}
-        placeholder="Breed"
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setSpecies(text)}
-        value={species}
-        placeholder="Species"
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setDescription(text)}
-        value={description}
-        placeholder="Description"
-      />
-      <Text>Lost/Found Location</Text>
+      <Text style={styles.titleText}>Location</Text>
 
       <GooglePlacesAutocomplete
         placeholder="Search Location"
@@ -94,6 +102,8 @@ function CreatePostScreen(props) {
             backgroundColor: "white",
             width: "80%",
             margin: 12,
+            borderWidth: 1,
+            borderRadius: 5,
           },
           textInput: {
             height: 40,
@@ -104,27 +114,28 @@ function CreatePostScreen(props) {
             height: "10%",
           },
         }}
-      />
-
+      /> 
+      <Text style={styles.titleText}>Description</Text>
+      <TextInput
+        style={{...styles.input, height: 150}}
+        onChangeText={(text) => setDescription(text)}
+        value={description}
+        placeholder="Description"
+      />    
+      </View>
       <View style={styles.buttonContainer}>
-        <Button
-          title="Cancel"
-          color="#3D7D6C"
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        />
-        <Button
-          title="Save"
-          color="#3D7D6C"
+      <TouchableOpacity
+          style={styles.postButton}
           onPress={() => {
             dispatch(
               addPost(breed, typeValue, location, time, species, description)
             );
             navigation.navigate("Home");
-          }}
-        />
-      </View>
+          }}>
+          <Text style={styles.buttonText}>Post</Text>
+        </TouchableOpacity>
+        </View>
+      </ScrollView>    
     </View>
   );
 }
@@ -135,33 +146,77 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    backgroundColor: "#fff",
+  },
+  navigationBar: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width : "100%",
+    padding: 10,
+    backgroundColor: "white",
+    height: 100,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
   },
   headerText: {
     fontSize: 20,
     fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 20,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+  },
+  titleText:{
+    fontSize: 16,
+    fontWeight: "bold",
+    margin: 10,
   },
   input: {
-    height: 40,
+    height: 45,
     margin: 10,
     borderWidth: 1,
     padding: 10,
-    width: "80%",
-  },
-  buttonContainer: {
-    flex: 0.2,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    width: "80%",
+    width: "100%",
+    borderRadius: 5,
   },
   dropDown: {
-    width: "80%",
+    width: "100%",
     height: 40,
     margin: 10,
+    borderRadius: 5,
   },
+  formContainer: {
+    flex: 1,
+    width: "85%",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    margin: "5%",
+  },
+  scroll: {
+    flex: 1,
+    width: "100%",
+  },
+  buttonContainer:{
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  postButton:{
+    width: 250,
+    height: 50,
+    margin: 10,
+    borderRadius: 5,
+    backgroundColor: "#3D7D6C",
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText:{
+    color: 'white',
+    fontSize: 20,
+  },
+
 });
 
 export default CreatePostScreen;
