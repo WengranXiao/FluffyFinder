@@ -23,12 +23,17 @@ const AuthScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {loginMode ? (
-        <SigninForm toggleLoginMode={toggleLoginMode} />
-      ) : (
-        <SignupForm toggleLoginMode={toggleLoginMode} navigation={navigation} />
-      )}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        {loginMode ? (
+          <SigninForm toggleLoginMode={toggleLoginMode} />
+        ) : (
+          <SignupForm
+            toggleLoginMode={toggleLoginMode}
+            navigation={navigation}
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 };

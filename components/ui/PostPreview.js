@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   quoteText: {
+    flex: 1,
     marginLeft: 8,
     fontSize: 16,
     fontStyle: "italic",

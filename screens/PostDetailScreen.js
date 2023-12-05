@@ -1,4 +1,13 @@
-import { View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity, } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { loadPosts } from "../data/Actions";
@@ -19,127 +28,110 @@ function PostDetailScreen(props) {
   console.log("route", route);
   console.log("navigation", navigation);
   return (
-    <View style={styles.container}>
-      <View style={styles.navigationBar}>
-        <Icon
-          name="arrow-left"
-          type="font-awesome"
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.titleText}>{selectedPost.author}</Text>
-        <Icon
-          name="dots-horizontal"
-          size={35}
-          type="material-community"
-          onPress={() => {}}
-        />
-      </View>
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.imageContainer}>
-      <ImageSwiper
-        images={[
-          "https://headsupfortails.com/cdn/shop/articles/cat_sleeping_with_toy_large.jpg?v=1645094444",
-          "https://static01.nyt.com/images/2021/11/23/business/00cutecats-disinfo-promo/00cutecats-disinfo-promo-mediumSquareAt3X.png",
-        ]}
-      />
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.titleText}>Breed</Text>
-        <View style={styles.infoRow}>
-              <Icon
-                name="paw"
-                type="material-community"
-                color="#3D7D6C"
-              />
-        <Text style={styles.infoText}>{selectedPost.breed}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.navigationBar}>
+          <Icon
+            name="arrow-left"
+            type="font-awesome"
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.titleText}>{selectedPost.author}</Text>
+          <Icon
+            name="dots-horizontal"
+            size={35}
+            type="material-community"
+            onPress={() => {}}
+          />
         </View>
-        <Text style={styles.titleText}>Species</Text>
-        <View style={styles.infoRow}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.imageContainer}>
+            <ImageSwiper
+              images={[
+                "https://headsupfortails.com/cdn/shop/articles/cat_sleeping_with_toy_large.jpg?v=1645094444",
+                "https://static01.nyt.com/images/2021/11/23/business/00cutecats-disinfo-promo/00cutecats-disinfo-promo-mediumSquareAt3X.png",
+              ]}
+            />
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.titleText}>Breed</Text>
+            <View style={styles.infoRow}>
+              <Icon name="paw" type="material-community" color="#3D7D6C" />
+              <Text style={styles.infoText}>{selectedPost.breed}</Text>
+            </View>
+            <Text style={styles.titleText}>Species</Text>
+            <View style={styles.infoRow}>
               <Icon
                 name="progress-question"
                 type="material-community"
                 color="#3D7D6C"
               />
-        <Text style={styles.infoText}>{selectedPost.species}</Text>
-        </View>
-        <Text style={styles.titleText}>Lost Time</Text>
-        <View style={{ ...styles.infoRow}}>
-              <Icon
-                name="clock"
-                type="material-community"
-                color="#3D7D6C"
-              />
-        <Text style={styles.infoText}>
-        {new Date(selectedPost.postTime).toLocaleString()}
-        </Text>
-        </View>
-        <Text style={styles.titleText}>Lost Location</Text>
-        <View style={styles.infoRow}>
+              <Text style={styles.infoText}>{selectedPost.species}</Text>
+            </View>
+            <Text style={styles.titleText}>Lost Time</Text>
+            <View style={{ ...styles.infoRow }}>
+              <Icon name="clock" type="material-community" color="#3D7D6C" />
+              <Text style={styles.infoText}>
+                {new Date(selectedPost.postTime).toLocaleString()}
+              </Text>
+            </View>
+            <Text style={styles.titleText}>Lost Location</Text>
+            <View style={styles.infoRow}>
               <Icon
                 name="map-marker"
                 type="material-community"
                 color="#3D7D6C"
               />
-        <Text style={styles.infoText}>{selectedPost.location}</Text>
-        </View>
-        <Text style={styles.titleText}>Description</Text>
-        <View style={styles.infoRow}>
-        <Icon
+              <Text style={styles.infoText}>{selectedPost.location}</Text>
+            </View>
+            <Text style={styles.titleText}>Description</Text>
+            <View style={styles.infoRow}>
+              <Icon
                 name="comment-quote"
                 type="material-community"
                 color="#3D7D6C"
               />
-        <Text style={styles.infoText}>{selectedPost.description}</Text>
-        </View>
-        <Text style={styles.titleText}>Contact</Text>
-        <View style={styles.infoRow}>
-        <Icon
-                name="phone"
+              <Text style={styles.infoText}>{selectedPost.description}</Text>
+            </View>
+            <Text style={styles.titleText}>Contact</Text>
+            <View style={styles.infoRow}>
+              <Icon name="phone" type="material-community" color="#3D7D6C" />
+              <Text style={styles.infoText}>123456789</Text>
+              <Icon
+                name="content-copy"
                 type="material-community"
                 color="#3D7D6C"
               />
-        <Text style={styles.infoText}>123456789</Text>
-        <Icon
-          name="content-copy"
-          type="material-community"
-          color="#3D7D6C"
-        />
-        </View>
-        <View style={styles.infoRow}>
-        <Icon
-          name="email"
-          type="material-community"
-          color="#3D7D6C"
-        />
-        <Text style={styles.infoText}>fakeemail@gmail.com</Text>
-        <Icon
-          name="content-copy"
-          type="material-community"
-          color="#3D7D6C"
-        />
-        </View>
-        <View style={styles.line} />
+            </View>
+            <View style={styles.infoRow}>
+              <Icon name="email" type="material-community" color="#3D7D6C" />
+              <Text style={styles.infoText}>fakeemail@gmail.com</Text>
+              <Icon
+                name="content-copy"
+                type="material-community"
+                color="#3D7D6C"
+              />
+            </View>
+            <View style={styles.line} />
 
-        <Text style={styles.titleText}>Comments</Text>
-
-      </View>
-
-      </ScrollView>
+            <Text style={styles.titleText}>Comments</Text>
+          </View>
+        </ScrollView>
         <TouchableOpacity
           onPress={() => navigation.navigate("CreatePost")}
           style={styles.commentButton}
         >
           <Icon name="comment" type="material-community" color="#fff" />
         </TouchableOpacity>
-    </View>
-      
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
     backgroundColor: "#fff",
   },
   navigationBar: {
@@ -152,7 +144,6 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
-
   },
   titleText: {
     fontSize: 20,
@@ -201,8 +192,8 @@ const styles = StyleSheet.create({
   },
   line: {
     height: 1,
-    width: '90%', 
-    backgroundColor: '#000000',
+    width: "90%",
+    backgroundColor: "#000000",
     marginHorizontal: "5%",
     marginVertical: "10%",
   },

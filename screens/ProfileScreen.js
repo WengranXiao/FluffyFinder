@@ -26,7 +26,7 @@ const ProfileScreen = ({ navigation, route }) => {
   useEffect(() => {}, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
