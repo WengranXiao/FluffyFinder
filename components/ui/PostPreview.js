@@ -6,10 +6,20 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Icon } from "@rneui/themed";
+import { Button, Icon, Overlay  } from "@rneui/themed";
 import ImageSwiper from "./ImageSwiper";
+import React, { useState } from 'react';
+// import { } from 'react-native-elements';
+import { deletePost } from '../../data/Actions';
+import { useDispatch } from 'react-redux';
 
-const PostPreview = ({ posts, navigation }) => {
+const PostPreview = ({ posts, navigation,isProfile }) => {
+  const [visible, setVisible] = useState(false);
+  const toggleEditOverlay = () => {
+    setVisible(!visible);
+  };
+  const dispatch = useDispatch();
+
   return (
     <FlatList
       width="100%"
@@ -63,7 +73,7 @@ const PostPreview = ({ posts, navigation }) => {
                 color="#3D7D6C"
               />
               <Text style={styles.infoText}>
-                {new Date(item.postTime*1000).toDateString()}
+                {new Date(item.postTime*1000).toLocaleString()}
               </Text>
             </View>
             <View style={styles.infoRow}>
@@ -81,6 +91,35 @@ const PostPreview = ({ posts, navigation }) => {
                 {item.description}
               </Text>
             </View>
+            {isProfile ? (
+              <View>
+              <TouchableOpacity
+                style={{ marginTop: 20 }}
+                onPress={() =>toggleEditOverlay() }
+              >
+                <Icon
+                  name="file-edit-outline"
+                  type="material-community"
+                  color="#3D7D6C"
+                  size={30}
+                />
+              </TouchableOpacity>
+              <Overlay isVisible={visible} onBackdropPress={toggleEditOverlay}>
+                <Button 
+                  title="Edit Post"
+                  color={"#3D7D6C"}
+                  style={{marginBottom: 10}}
+                  onPress={() => navigation.navigate("EditPost", { key: item.key })}
+                />
+                <Button
+                  title="Delete Post"
+                  color={"#3D7D6C"}
+                  onPress={() =>{dispatch(deletePost(item))} }
+                />
+              </Overlay>
+             </View>
+            ) : null}
+
           </TouchableOpacity>
         </View>
       )}
@@ -127,7 +166,6 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   quoteText: {
-    flex: 1,
     marginLeft: 8,
     fontSize: 16,
     fontStyle: "italic",

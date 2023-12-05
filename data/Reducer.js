@@ -1,6 +1,7 @@
 const LOAD_POSTS = "LOAD_POSTS";
 const LOAD_USER_INFO = "LOAD_USER_INFO";
 const ADD_POST = "ADD_POST";
+const DELETE_POST = 'DELETE_POST';
 
 const initialState = {
   user: [],
@@ -31,8 +32,8 @@ const addPost = (
   description,
   key
 ) => {
-  let { listItems } = state;
-  let newListItems = listItems.concat({
+  let { posts } = state;
+  let newposts = posts.concat({
     key: key,
     breed: breed,
     postTime: time,
@@ -46,9 +47,18 @@ const addPost = (
   });
   return {
     ...state,
-    listItems: newListItems,
+    posts: newposts,
   };
 };
+
+const deletePost = (state, itemId) => {
+  let { posts } = state; 
+  let newPosts = posts.filter(elem => elem.key !== itemId);
+  return {
+    ...state, 
+    posts: newPosts  
+  }
+}
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -71,9 +81,11 @@ function rootReducer(state = initialState, action) {
         payload.key,
         payload.resolved
       );
+    case DELETE_POST:
+      return deletePost(state, payload.key);
 
     default:
       return state;
   }
 }
-export { rootReducer, LOAD_POSTS, ADD_POST, LOAD_USER_INFO };
+export { rootReducer, LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST };

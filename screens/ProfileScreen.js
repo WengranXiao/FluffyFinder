@@ -198,6 +198,7 @@ const ProfileScreen = ({ navigation, route }) => {
                 ? post.resolved
                 : !post.resolved && post.type === tabMap[tab]
             )}
+            isProfile={true}
           />
         </View>
       </View>

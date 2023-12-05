@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import {
   addDoc,
   setDoc,
+  deleteDoc,
   updateDoc,
   getDoc,
   query,
@@ -15,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from "../Secrets";
-import { LOAD_POSTS, ADD_POST, LOAD_USER_INFO } from "./Reducer";
+import { LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST } from "./Reducer";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -92,7 +93,7 @@ const loadPosts = () => {
     onSnapshot(q, (querySnapshot) => {
       let newPosts = querySnapshot.docs.map((docSnap) => ({
         ...docSnap.data(),
-        // key: docSnap.id,
+        key: docSnap.id,
       }));
 
       dispatch({
@@ -114,7 +115,6 @@ const addPost = (breed, typeValue, location, time, species, description) => {
   return async (dispatch) => {
     const docRef = await addDoc(collection(db, "PostList"), {
       breed: breed,
-      key: Math.random(),
       species: species,
       description: description,
       postTime: time,
@@ -124,8 +124,23 @@ const addPost = (breed, typeValue, location, time, species, description) => {
       type: typeValue,
       resolved: false,
     });
+    const id = docRef.id;
+    await updateDoc(doc(db, "PostList", id), { key: id });
   };
 };
+
+const deletePost = (item) => {
+  return async (dispatch) => {
+    await deleteDoc(doc(db, 'PostList', item.key));
+    dispatch({
+      type: DELETE_POST,
+      payload: {
+        key: item.key
+      }
+    })
+  };
+}
+
 export {
   addUser,
   updateUser,
@@ -133,4 +148,5 @@ export {
   loadPosts,
   addPost,
   loadUserInfo,
+  deletePost,
 };

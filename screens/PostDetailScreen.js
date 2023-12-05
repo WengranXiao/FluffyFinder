@@ -72,7 +72,7 @@ function PostDetailScreen(props) {
             <View style={{ ...styles.infoRow }}>
               <Icon name="clock" type="material-community" color="#3D7D6C" />
               <Text style={styles.infoText}>
-              {new Date(selectedPost.postTime*1000).toDateString()}
+              {new Date(selectedPost.postTime*1000).toLocaleString()}
               </Text>
             </View>
             <Text style={styles.titleText}>Lost Location</Text>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     padding: 10,
     backgroundColor: "white",
-    height: 100,
+    height: 50,
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
