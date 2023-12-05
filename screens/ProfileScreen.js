@@ -6,16 +6,17 @@ import {
   Alert,
   Image,
   TouchableOpacity,
-  FlatList,
   SafeAreaView,
 } from "react-native";
 import { Button, Icon } from "@rneui/themed";
 import { signOut } from "../AuthManager";
 import { useSelector } from "react-redux";
 import PostPreview from "../components/ui/PostPreview";
+import Modal from "../components/ui/Modal";
 
 const ProfileScreen = ({ navigation, route }) => {
   const [tab, setTab] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
   const userInfo = useSelector((state) => state.user);
   const posts = useSelector((state) => state.posts);
 
@@ -24,6 +25,8 @@ const ProfileScreen = ({ navigation, route }) => {
     : ["Pet Lost", "Pet Found", "Archived"];
 
   useEffect(() => {}, []);
+
+  const tabMap = ["lost", "found"];
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -46,6 +49,7 @@ const ProfileScreen = ({ navigation, route }) => {
               width: "100%",
               alignItems: "center",
               justifyContent: "flex-start",
+              zIndex: 1,
             }}
           >
             <Image
@@ -60,67 +64,99 @@ const ProfileScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 24, fontWeight: "bold" }}>
               {userInfo.displayName}
             </Text>
-            <TouchableOpacity
-              onPress={() => {}}
-              style={{
-                width: 32,
-                height: 32,
-                backgroundColor: "#3D7D6C",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 5,
-                position: "absolute",
-                right: 0,
-              }}
-            >
-              <Icon name="settings-sharp" type="ionicon" color="#fff" />
-            </TouchableOpacity>
+            <View style={styles.buttonAndModalContainer}>
+              <TouchableOpacity
+                onPress={() => setModalVisible(!modalVisible)}
+                style={{
+                  width: 32,
+                  height: 32,
+                  backgroundColor: "#3D7D6C",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 5,
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                }}
+              >
+                <Icon name="settings-sharp" type="ionicon" color="#fff" />
+              </TouchableOpacity>
+              <Modal
+                isVisible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                buttons={[
+                  {
+                    text: "Edit Profile",
+                    onPress: () => navigation.navigate("ProfileEdit"),
+                    color: "#3D7D6C",
+                  },
+                  {
+                    text: "Sign Out",
+                    onPress: async () => {
+                      try {
+                        await signOut();
+                      } catch (error) {
+                        Alert.alert("Sign Out Error", error.message, [
+                          { text: "OK" },
+                        ]);
+                      }
+                    },
+                    color: "#FF3131",
+                  },
+                ]}
+              />
+            </View>
           </View>
 
           <View>
-            <View style={styles.contactLine}>
-              <Icon name="email" type="zocial" size={22} color="#3D7D6C" />
-              <Text style={{ fontSize: 16 }}>{userInfo.contactEmail}</Text>
-              <TouchableOpacity
-                onPress={() => {}}
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  display: route?.params?.otherUser ? "flex" : "none",
-                }}
-              >
+            {userInfo.contactEmail && (
+              <View style={styles.contactLine}>
+                <Icon name="email" type="zocial" size={22} color="#3D7D6C" />
+                <Text style={{ fontSize: 16 }}>{userInfo.contactEmail}</Text>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    display: route?.params?.otherUser ? "flex" : "none",
+                  }}
+                >
+                  <Icon
+                    name="content-copy"
+                    type="material"
+                    color="#3D7D6C"
+                    size={24}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {userInfo.contactPhone && (
+              <View style={styles.contactLine}>
                 <Icon
-                  name="content-copy"
-                  type="material"
+                  name="phone-alt"
+                  type="font-awesome-5"
+                  size={22}
                   color="#3D7D6C"
-                  size={24}
                 />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.contactLine}>
-              <Icon
-                name="phone-alt"
-                type="font-awesome-5"
-                size={22}
-                color="#3D7D6C"
-              />
-              <Text style={{ fontSize: 16 }}>{userInfo.contactPhone}</Text>
-              <TouchableOpacity
-                onPress={() => {}}
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  display: route?.params?.otherUser ? "flex" : "none",
-                }}
-              >
-                <Icon
-                  name="content-copy"
-                  type="material"
-                  color="#3D7D6C"
-                  size={24}
-                />
-              </TouchableOpacity>
-            </View>
+                <Text style={{ fontSize: 16 }}>{userInfo.contactPhone}</Text>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    display: route?.params?.otherUser ? "flex" : "none",
+                  }}
+                >
+                  <Icon
+                    name="content-copy"
+                    type="material"
+                    color="#3D7D6C"
+                    size={24}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
 
@@ -155,20 +191,15 @@ const ProfileScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             ))}
           </View>
-          <PostPreview navigation={navigation} posts={posts} />
+          <PostPreview
+            navigation={navigation}
+            posts={posts.filter((post) =>
+              tab === 2
+                ? post.resolved
+                : !post.resolved && post.type === tabMap[tab]
+            )}
+          />
         </View>
-
-        <Button
-          onPress={async () => {
-            try {
-              await signOut();
-            } catch (error) {
-              Alert.alert("Sign In Error", error.message, [{ text: "OK" }]);
-            }
-          }}
-        >
-          Now sign out!
-        </Button>
       </View>
     </SafeAreaView>
   );
@@ -191,6 +222,7 @@ const styles = StyleSheet.create({
   profileSection: {
     width: "100%",
     gap: 30,
+    zIndex: 1,
   },
   contactLine: {
     flexDirection: "row",
@@ -211,6 +243,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+  },
+  buttonAndModalContainer: {
+    flex: 1,
+    height: 32,
+    position: "relative",
+    alignItems: "flex-end",
+    zIndex: 10,
   },
 });
 

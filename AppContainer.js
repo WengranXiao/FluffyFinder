@@ -9,6 +9,7 @@ import MapScreen from "./screens/MapScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import PostDetailScreen from "./screens/PostDetailScreen";
 import CreatePostScreen from "./screens/CreatePostScreen";
+import ProfileEditScreen from "./screens/ProfileEditScreen";
 
 export default function AppContainer() {
   // Create the stack and tab navigator
@@ -43,6 +44,7 @@ export default function AppContainer() {
     return (
       <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
         <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+        <ProfileStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
         <ProfileStack.Screen name="PostDetail" component={PostDetailScreen} />
       </ProfileStack.Navigator>
     );
