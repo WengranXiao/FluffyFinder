@@ -106,15 +106,15 @@ const PostPreview = ({ posts, navigation,isProfile }) => {
               </TouchableOpacity>
               <Overlay isVisible={visible} onBackdropPress={toggleEditOverlay}>
                 <Button 
-                  title="Edit Post"
+                  title="Update Post"
                   color={"#3D7D6C"}
                   style={{marginBottom: 10}}
-                  onPress={() => navigation.navigate("EditPost", { key: item.key })}
+                  onPress={() => {navigation.navigate("CreatePost", { key: item.key });toggleEditOverlay()}}
                 />
                 <Button
                   title="Delete Post"
                   color={"#3D7D6C"}
-                  onPress={() =>{dispatch(deletePost(item))} }
+                  onPress={() =>{dispatch(deletePost(item));toggleEditOverlay()} }
                 />
               </Overlay>
              </View>

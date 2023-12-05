@@ -36,7 +36,7 @@ function PostDetailScreen(props) {
             type="font-awesome"
             onPress={() => navigation.goBack()}
           />
-          <Text style={styles.titleText}>{selectedPost.author}</Text>
+          <Text style={{...styles.titleText, marginTop:0}}>{selectedPost.author}</Text>
           <Icon
             name="dots-horizontal"
             size={35}
@@ -115,6 +115,7 @@ function PostDetailScreen(props) {
             <View style={styles.line} />
 
             <Text style={styles.titleText}>Comments</Text>
+            
           </View>
         </ScrollView>
         <TouchableOpacity

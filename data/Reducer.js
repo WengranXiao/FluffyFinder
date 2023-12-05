@@ -2,6 +2,7 @@ const LOAD_POSTS = "LOAD_POSTS";
 const LOAD_USER_INFO = "LOAD_USER_INFO";
 const ADD_POST = "ADD_POST";
 const DELETE_POST = 'DELETE_POST';
+const UPDATE_POST = 'UPDATE_POST';
 
 const initialState = {
   user: [],
@@ -59,6 +60,25 @@ const deletePost = (state, itemId) => {
     posts: newPosts  
   }
 }
+const updatePost = (state, itemId, breed, typeValue, location, time, species, description) => {
+  let { posts } = state;
+  let newPost = {
+    key: itemId, 
+    breed: breed,
+    species: species,
+    description: description,
+    postTime: time,
+    reportTime: time,
+    updateTime: time,
+    location: location,
+    type: typeValue,
+  };
+  let newPosts = posts.map(elem=>elem.key===itemId?newPost:elem);
+  return {
+    ...state, 
+    posts: newPosts
+  };
+}
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -83,9 +103,20 @@ function rootReducer(state = initialState, action) {
       );
     case DELETE_POST:
       return deletePost(state, payload.key);
+    case UPDATE_POST:
+      return updatePost(
+        state,
+        payload.key,
+        payload.breed,
+        payload.typeValue,
+        payload.location,
+        payload.time,
+        payload.species,
+        payload.description
+      );
 
     default:
       return state;
   }
 }
-export { rootReducer, LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST };
+export { rootReducer, LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST, UPDATE_POST };

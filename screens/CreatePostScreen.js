@@ -13,24 +13,28 @@ import { CheckBox } from "@rneui/themed";
 import { Input, Button } from "@rneui/themed";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@rneui/themed";
-import { addPost } from "../data/Actions";
+import { addPost, updatePost } from "../data/Actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import DropDownPicker from "react-native-dropdown-picker";
 
 function CreatePostScreen(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  const {key} = route.params;
+  const posts = useSelector((state) => state.posts);
+  const item = posts.find((post) => post.key === key);
   const dispatch = useDispatch();
 
-  const [breed, setBreed] = useState("");
-  const [species, setSpecies] = useState("");
-  const [time, setTime] = useState(new Date());
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
+  const [breed, setBreed] = useState(item?item.breed : "");
+  const [species, setSpecies] = useState(item?item.species : "");
+  const [time, setTime] = useState(item?new Date(item.postTime * 1000) : new Date());
+  const [location, setLocation] = useState(item?item.location : "");
+  const [description, setDescription] = useState(item?item.description : "");
   // const [geopoint, setGeopoint] = useState(null);
 
+
   const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
-  const [typeValue, setTypeValue] = useState(null);
+  const [typeValue, setTypeValue] = useState(item?item.type : "");
   const [types, setTypes] = useState([
     { label: "I lost my pet", value: "lost" },
     { label: "I found an unknown pet", value: "found" },
@@ -42,7 +46,7 @@ function CreatePostScreen(props) {
           <View style={styles.formContainer}>
           <Text style={styles.titleText}>Location</Text>
           <GooglePlacesAutocomplete
-            placeholder="Search Location"
+            placeholder={location?location:"Search Location"}
             onPress={(data, details = null) => {
               // console.log(data.description);
               // console.log(details.geometry.location);
@@ -81,7 +85,7 @@ function CreatePostScreen(props) {
               setOpen={setTypeDropdownOpen}
               setValue={setTypeValue}
               setItems={setTypes}
-              placeholder={"Choose your post type"}
+              placeholder="Choose your post type"
             />
             <Text style={styles.titleText}>Breed</Text>
             <TextInput
@@ -119,6 +123,7 @@ function CreatePostScreen(props) {
             <TouchableOpacity
               style={styles.postButton}
               onPress={() => {
+                if (key === -1) {
                 dispatch(
                   addPost(
                     breed,
@@ -129,7 +134,21 @@ function CreatePostScreen(props) {
                     description
                   )
                 );
-                navigation.navigate("Home");
+                navigation.navigate("Home");}
+                else {
+                  dispatch(
+                    updatePost(
+                      item,
+                      breed,
+                      typeValue,
+                      location,
+                      time,
+                      species,
+                      description
+                    )
+                  );
+                  navigation.navigate("PostDetail", { key: item.key });
+                }
               }}
             >
               <Text style={styles.buttonText}>Post</Text>

@@ -29,7 +29,7 @@ const HomeScreen = (props) => {
         <PostPreview navigation={navigation} posts={posts} />
         <TouchableOpacity
           style={styles.createPostButton}
-          onPress={() => navigation.navigate("CreatePost")}
+          onPress={() => navigation.navigate("CreatePost",{key:-1})}
         >
           <Icon name="plus" type="font-awesome" color="#fff" />
         </TouchableOpacity>

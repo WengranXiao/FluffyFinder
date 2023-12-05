@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from "../Secrets";
-import { LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST } from "./Reducer";
+import { LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST, UPDATE_POST } from "./Reducer";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -139,6 +139,36 @@ const deletePost = (item) => {
       }
     })
   };
+};
+
+const updatePost =  (item, breed, typeValue, location, time, species, description) => {
+  return async (dispatch) => {
+    await updateDoc(doc(db, 'PostList', item.key), {
+      breed: breed,
+      species: species,
+      description: description,
+      postTime: time,
+      reportTime: time,
+      updateTime: time,
+      location: location,
+      type: typeValue,
+    });
+    dispatch({
+      type: UPDATE_POST,
+      payload: {
+        key: item.key,
+        breed: breed,
+        species: species,
+        description: description,
+        postTime: time.seconds,
+        reportTime: time.seconds,
+        updateTime: time.seconds,
+        // invalid time
+        location: location,
+        type: typeValue,
+      }
+    });
+  }
 }
 
 export {
@@ -149,4 +179,5 @@ export {
   addPost,
   loadUserInfo,
   deletePost,
+  updatePost
 };
