@@ -122,6 +122,7 @@ const addPost = (breed, typeValue, location, time, species, description) => {
       updateTime: time,
       location: location,
       type: typeValue,
+      resolved: false,
     });
   };
 };

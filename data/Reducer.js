@@ -42,6 +42,7 @@ const addPost = (
     description: description,
     location: location,
     type: typeValue,
+    resolved: false,
   });
   return {
     ...state,
@@ -67,7 +68,8 @@ function rootReducer(state = initialState, action) {
         payload.typeValue,
         payload.species,
         payload.description,
-        payload.key
+        payload.key,
+        payload.resolved
       );
 
     default:
