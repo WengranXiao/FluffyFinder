@@ -39,17 +39,39 @@ function CreatePostScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={styles.navigationBar}>
-          <Icon
-            name="arrow-left"
-            type="font-awesome"
-            style={styles.gobackIcon}
-            onPress={() => navigation.goBack()}
-          />
-          <Text style={styles.headerText}>Create Post</Text>
-        </View>
-        <ScrollView style={styles.scroll}>
           <View style={styles.formContainer}>
+          <Text style={styles.titleText}>Location</Text>
+          <GooglePlacesAutocomplete
+            placeholder="Search Location"
+            onPress={(data, details = null) => {
+              // console.log(data.description);
+              // console.log(details.geometry.location);
+              setLocation(data.description);
+              // setGeopoint(details.geometry.location);
+            }}
+            query={{
+              key: "AIzaSyAsBiGHdUmGB41gkhkVGiBH185EplwLX1c",
+              language: "en",
+            }}
+            fetchDetails={true}
+            styles={{
+              textInputContainer: {
+                backgroundColor: "white",
+                width: "80%",
+                margin: 12,
+                borderWidth: 1,
+                borderRadius: 5,
+              },
+              textInput: {
+                height: 40,
+                color: "black",
+                fontSize: 16,
+              },
+              listView: {
+                height: "10%",
+              },
+            }}
+          />
             <Text style={styles.titleText}>Post Type</Text>
             <DropDownPicker
               style={styles.dropDown}
@@ -84,42 +106,10 @@ function CreatePostScreen(props) {
                 setTime(currentDate);
               }}
             />
-            <Text style={styles.titleText}>Location</Text>
 
-            <GooglePlacesAutocomplete
-              placeholder="Search Location"
-              onPress={(data, details = null) => {
-                // console.log(data.description);
-                // console.log(details.geometry.location);
-                setLocation(data.description);
-                // setGeopoint(details.geometry.location);
-              }}
-              query={{
-                key: "AIzaSyAsBiGHdUmGB41gkhkVGiBH185EplwLX1c",
-                language: "en",
-              }}
-              fetchDetails={true}
-              styles={{
-                textInputContainer: {
-                  backgroundColor: "white",
-                  width: "80%",
-                  margin: 12,
-                  borderWidth: 1,
-                  borderRadius: 5,
-                },
-                textInput: {
-                  height: 40,
-                  color: "black",
-                  fontSize: 16,
-                },
-                listView: {
-                  height: "10%",
-                },
-              }}
-            />
             <Text style={styles.titleText}>Description</Text>
             <TextInput
-              style={{ ...styles.input, height: 150 }}
+              style={styles.input}
               onChangeText={(text) => setDescription(text)}
               value={description}
               placeholder="Description"
@@ -145,7 +135,6 @@ function CreatePostScreen(props) {
               <Text style={styles.buttonText}>Post</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -182,7 +171,6 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 16,
     fontWeight: "bold",
-    margin: 10,
   },
   input: {
     height: 45,

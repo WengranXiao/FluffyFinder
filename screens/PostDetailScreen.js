@@ -72,7 +72,7 @@ function PostDetailScreen(props) {
             <View style={{ ...styles.infoRow }}>
               <Icon name="clock" type="material-community" color="#3D7D6C" />
               <Text style={styles.infoText}>
-                {new Date(selectedPost.postTime).toLocaleString()}
+              {new Date(selectedPost.postTime*1000).toDateString()}
               </Text>
             </View>
             <Text style={styles.titleText}>Lost Location</Text>

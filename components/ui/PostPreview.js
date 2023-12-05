@@ -63,7 +63,7 @@ const PostPreview = ({ posts, navigation }) => {
                 color="#3D7D6C"
               />
               <Text style={styles.infoText}>
-                {new Date(item.postTime).toLocaleString()}
+                {new Date(item.postTime*1000).toDateString()}
               </Text>
             </View>
             <View style={styles.infoRow}>

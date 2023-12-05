@@ -36,6 +36,8 @@ const addPost = (
     key: key,
     breed: breed,
     postTime: time,
+    reportTime: time,
+    updateTime: time,
     species: species,
     description: description,
     location: location,
@@ -58,6 +60,8 @@ function rootReducer(state = initialState, action) {
       return addPost(
         state,
         payload.postTime,
+        payload.reportTime,
+        payload.updateTime,
         payload.location,
         payload.breed,
         payload.typeValue,

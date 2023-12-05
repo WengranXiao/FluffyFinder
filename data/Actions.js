@@ -118,6 +118,8 @@ const addPost = (breed, typeValue, location, time, species, description) => {
       species: species,
       description: description,
       postTime: time,
+      reportTime: time,
+      updateTime: time,
       location: location,
       type: typeValue,
     });
