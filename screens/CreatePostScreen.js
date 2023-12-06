@@ -91,19 +91,20 @@ function CreatePostScreen(props) {
             }}
           />
             
-            <Text style={styles.titleText}>Breed</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setBreed(text)}
-              value={breed}
-              placeholder="Breed"
-            />
+            
             <Text style={styles.titleText}>Species</Text>
             <TextInput
               style={styles.input}
               onChangeText={(text) => setSpecies(text)}
               value={species}
               placeholder="Species"
+            />
+            <Text style={styles.titleText}>Breed</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setBreed(text)}
+              value={breed}
+              placeholder="Breed"
             />
             <Text style={styles.titleText}>Lost/Found Time</Text>
             <DateTimePicker
