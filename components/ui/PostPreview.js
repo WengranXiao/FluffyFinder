@@ -15,8 +15,10 @@ import { useDispatch } from 'react-redux';
 
 const PostPreview = ({ posts, navigation,isProfile }) => {
   const [visible, setVisible] = useState(false);
-  const toggleEditOverlay = () => {
+  const [currentEditPost, setCurrentEditPost] = useState(null);
+  const toggleEditOverlay = (item) => {
     setVisible(!visible);
+    setCurrentEditPost(item);
   };
   const dispatch = useDispatch();
 
@@ -95,7 +97,7 @@ const PostPreview = ({ posts, navigation,isProfile }) => {
               <View>
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() =>toggleEditOverlay() }
+                onPress={() =>toggleEditOverlay(item) }
               >
                 <Icon
                   name="file-edit"
@@ -109,12 +111,12 @@ const PostPreview = ({ posts, navigation,isProfile }) => {
                   title="Update Post"
                   color={"#3D7D6C"}
                   style={{marginBottom: 10}}
-                  onPress={() => {navigation.navigate("CreatePost", { key: item.key });toggleEditOverlay()}}
+                  onPress={() => {navigation.navigate("CreatePost", { key: currentEditPost.key });toggleEditOverlay()}}
                 />
                 <Button
                   title="Delete Post"
                   color={"#3D7D6C"}
-                  onPress={() =>{dispatch(deletePost(item));toggleEditOverlay()} }
+                  onPress={() =>{dispatch(deletePost(currentEditPost));toggleEditOverlay()} }
                 />
               </Overlay>
              </View>
