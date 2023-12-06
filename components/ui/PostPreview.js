@@ -14,14 +14,9 @@ import { useDispatch } from "react-redux";
 import Modal from "./Modal";
 
 const PostPreview = ({ posts, navigation, isProfile }) => {
-  const [visible, setVisible] = useState(false);
   const [currentEditPost, setCurrentEditPost] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const toggleEditOverlay = (item) => {
-    setVisible(!visible);
-    setCurrentEditPost(item);
-  };
   const dispatch = useDispatch();
 
   return (
@@ -61,7 +56,10 @@ const PostPreview = ({ posts, navigation, isProfile }) => {
                     justifyContent: "center",
                     borderRadius: 5,
                   }}
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    setCurrentEditPost(item);
+                  }}
                 >
                   <Icon
                     name="file-edit"
@@ -77,15 +75,19 @@ const PostPreview = ({ posts, navigation, isProfile }) => {
                   buttons={[
                     {
                       text: "Edit Post",
-                      onPress: () =>
+                      onPress: () => {
                         navigation.navigate("CreatePost", {
                           key: currentEditPost.key,
-                        }),
+                        });
+                        setModalVisible(false);
+                      },
                       color: "#3D7D6C",
                     },
                     {
                       text: "I Found My Pet",
-                      onPress: () => {},
+                      onPress: () => {
+                        setModalVisible(false);
+                      },
                       color: "#3D7D6C",
                     },
                     {

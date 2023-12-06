@@ -16,7 +16,13 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from "../Secrets";
-import { LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST, UPDATE_POST } from "./Reducer";
+import {
+  LOAD_POSTS,
+  ADD_POST,
+  LOAD_USER_INFO,
+  DELETE_POST,
+  UPDATE_POST,
+} from "./Reducer";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -100,7 +106,7 @@ const loadPosts = () => {
         type: LOAD_POSTS,
         payload: {
           newPosts: newPosts.map((post) => ({
-            ...post,  
+            ...post,
           })),
         },
       });
@@ -128,19 +134,27 @@ const addPost = (breed, typeValue, location, time, species, description) => {
 
 const deletePost = (item) => {
   return async (dispatch) => {
-    await deleteDoc(doc(db, 'PostList', item.key));
+    await deleteDoc(doc(db, "PostList", item.key));
     dispatch({
       type: DELETE_POST,
       payload: {
-        key: item.key
-      }
-    })
+        key: item.key,
+      },
+    });
   };
 };
 
-const updatePost =  (item, breed, typeValue, location, time, species, description) => {
+const updatePost = (
+  item,
+  breed,
+  typeValue,
+  location,
+  time,
+  species,
+  description
+) => {
   return async (dispatch) => {
-    await updateDoc(doc(db, 'PostList', item.key), {
+    await updateDoc(doc(db, "PostList", item.key), {
       breed: breed,
       species: species,
       description: description,
@@ -162,10 +176,16 @@ const updatePost =  (item, breed, typeValue, location, time, species, descriptio
         updateTime: time,
         location: location,
         type: typeValue,
-      }
+      },
     });
-  }
-}
+  };
+};
+
+const getPostAuthorInfo = async (authorId) => {
+  const userSnap = await getDoc(doc(db, "users", authorId));
+  const user = userSnap.data();
+  return user;
+};
 
 export {
   addUser,
@@ -175,5 +195,6 @@ export {
   addPost,
   loadUserInfo,
   deletePost,
-  updatePost
+  updatePost,
+  getPostAuthorInfo,
 };

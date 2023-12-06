@@ -24,6 +24,7 @@ export default function AppContainer() {
         <HomeStack.Screen name="Home" component={HomeScreen} />
         <HomeStack.Screen name="PostDetail" component={PostDetailScreen} />
         <HomeStack.Screen name="CreatePost" component={CreatePostScreen} />
+        <HomeStack.Screen name="Profile" component={ProfileScreen} />
       </HomeStack.Navigator>
     );
   }
@@ -46,6 +47,7 @@ export default function AppContainer() {
         <ProfileStack.Screen name="Profile" component={ProfileScreen} />
         <ProfileStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
         <ProfileStack.Screen name="PostDetail" component={PostDetailScreen} />
+        <ProfileStack.Screen name="CreatePost" component={CreatePostScreen} />
       </ProfileStack.Navigator>
     );
   }

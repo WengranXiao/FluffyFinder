@@ -66,49 +66,52 @@ const ProfileScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 24, fontWeight: "bold" }}>
               {userInfo.displayName}
             </Text>
-            <View style={styles.buttonAndModalContainer}>
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={{
-                  width: 32,
-                  height: 32,
-                  backgroundColor: "#3D7D6C",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 5,
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                }}
-              >
-                <Icon name="settings-sharp" type="ionicon" color="#fff" />
-              </TouchableOpacity>
-              <Modal
-                isVisible={modalVisible}
-                topDistance={40}
-                onClose={() => setModalVisible(false)}
-                buttons={[
-                  {
-                    text: "Edit Profile",
-                    onPress: () => navigation.navigate("ProfileEdit"),
-                    color: "#3D7D6C",
-                  },
-                  {
-                    text: "Sign Out",
-                    onPress: async () => {
-                      try {
-                        await signOut();
-                      } catch (error) {
-                        Alert.alert("Sign Out Error", error.message, [
-                          { text: "OK" },
-                        ]);
-                      }
+
+            {!route?.params?.otherUser && (
+              <View style={styles.buttonAndModalContainer}>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(!modalVisible)}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    backgroundColor: "#3D7D6C",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                  }}
+                >
+                  <Icon name="settings-sharp" type="ionicon" color="#fff" />
+                </TouchableOpacity>
+                <Modal
+                  isVisible={modalVisible}
+                  topDistance={40}
+                  onClose={() => setModalVisible(false)}
+                  buttons={[
+                    {
+                      text: "Edit Profile",
+                      onPress: () => navigation.navigate("ProfileEdit"),
+                      color: "#3D7D6C",
                     },
-                    color: "#FF3131",
-                  },
-                ]}
-              />
-            </View>
+                    {
+                      text: "Sign Out",
+                      onPress: async () => {
+                        try {
+                          await signOut();
+                        } catch (error) {
+                          Alert.alert("Sign Out Error", error.message, [
+                            { text: "OK" },
+                          ]);
+                        }
+                      },
+                      color: "#FF3131",
+                    },
+                  ]}
+                />
+              </View>
+            )}
           </View>
 
           <View>
@@ -193,6 +196,7 @@ const ProfileScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             ))}
           </View>
+
           <PostPreview
             navigation={navigation}
             posts={posts.filter((post) =>
@@ -200,7 +204,7 @@ const ProfileScreen = ({ navigation, route }) => {
                 ? post.resolved
                 : !post.resolved && post.type === tabMap[tab]
             )}
-            isProfile={tab !== 2}
+            isProfile={!route?.params?.otherUser && tab !== 2}
           />
         </View>
       </View>
