@@ -94,11 +94,11 @@ const PostPreview = ({ posts, navigation,isProfile }) => {
             {isProfile ? (
               <View>
               <TouchableOpacity
-                style={{ marginTop: 20 }}
+                style={styles.editButton}
                 onPress={() =>toggleEditOverlay() }
               >
                 <Icon
-                  name="file-edit-outline"
+                  name="file-edit"
                   type="material-community"
                   color="#3D7D6C"
                   size={30}
@@ -169,6 +169,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 16,
     fontStyle: "italic",
+  },
+  editButton: {
+    position: "absolute",
+    bottom: 120,
+    right: 5,
+    padding: 10,
   },
 });
 
