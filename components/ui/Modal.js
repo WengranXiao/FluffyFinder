@@ -1,12 +1,12 @@
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 
-const Modal = ({ isVisible, buttons }) => {
+const Modal = ({ isVisible, buttons, topDistance }) => {
   if (!isVisible) {
     return null;
   }
 
   return (
-    <View style={styles.modalContainer}>
+    <View style={[styles.modalContainer, { top: topDistance }]}>
       <View style={styles.modal}>
         {buttons.map((button, index) => (
           <TouchableOpacity
@@ -25,7 +25,7 @@ const Modal = ({ isVisible, buttons }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     position: "absolute",
-    top: 40,
+    // top: 40,
     right: 0,
     width: 180,
     justifyContent: "center",

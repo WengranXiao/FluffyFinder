@@ -59,6 +59,8 @@ const ProfileScreen = ({ navigation, route }) => {
                 height: 74,
                 borderRadius: 37,
                 marginRight: 20,
+                borderWidth: 2,
+                borderColor: "#3D7D6C",
               }}
             />
             <Text style={{ fontSize: 24, fontWeight: "bold" }}>
@@ -83,6 +85,7 @@ const ProfileScreen = ({ navigation, route }) => {
               </TouchableOpacity>
               <Modal
                 isVisible={modalVisible}
+                topDistance={40}
                 onClose={() => setModalVisible(false)}
                 buttons={[
                   {
@@ -170,7 +173,6 @@ const ProfileScreen = ({ navigation, route }) => {
                 style={{
                   width: 90,
                   textAlign: "center",
-                  marginHorizontal: 10,
                   paddingBottom: 2,
                   borderBottomWidth: 4,
                   borderBottomColor: index === tab ? "#3D7D6C" : "transparent",
@@ -198,7 +200,7 @@ const ProfileScreen = ({ navigation, route }) => {
                 ? post.resolved
                 : !post.resolved && post.type === tabMap[tab]
             )}
-            isProfile={true}
+            isProfile={tab !== 2}
           />
         </View>
       </View>
@@ -241,7 +243,7 @@ const styles = StyleSheet.create({
   },
   tabs: {
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "row",
   },

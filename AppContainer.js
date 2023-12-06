@@ -53,7 +53,38 @@ export default function AppContainer() {
   function MainTabNavigator() {
     return (
       <Tab.Navigator
-        screenOptions={{ headerShown: false }}
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => {
+            const map = {
+              HomeTab: {
+                name: "home",
+                type: "material-community",
+                color: focused ? "#3D7D6C" : "#A0C7B5",
+              },
+              MapTab: {
+                name: "map-marker-multiple",
+                type: "material-community",
+                color: focused ? "#3D7D6C" : "#A0C7B5",
+              },
+              ProfileTab: {
+                name: "account",
+                type: "material-community",
+                color: focused ? "#3D7D6C" : "#A0C7B5",
+              },
+            };
+
+            return (
+              <Icon
+                name={map[route.name].name}
+                type={map[route.name].type}
+                color={map[route.name].color}
+                size={30}
+              />
+            );
+          },
+          tabBarShowLabel: false,
+        })}
         initialRouteName="HomeTab"
       >
         <Tab.Screen name="HomeTab" component={HomeStackScreen} />

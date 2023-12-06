@@ -9,13 +9,15 @@ import {
 import { Button, Icon, Overlay } from "@rneui/themed";
 import ImageSwiper from "./ImageSwiper";
 import React, { useState } from "react";
-// import { } from 'react-native-elements';
 import { deletePost } from "../../data/Actions";
 import { useDispatch } from "react-redux";
+import Modal from "./Modal";
 
 const PostPreview = ({ posts, navigation, isProfile }) => {
   const [visible, setVisible] = useState(false);
   const [currentEditPost, setCurrentEditPost] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const toggleEditOverlay = (item) => {
     setVisible(!visible);
     setCurrentEditPost(item);
@@ -48,6 +50,56 @@ const PostPreview = ({ posts, navigation, isProfile }) => {
                 "https://static01.nyt.com/images/2021/11/23/business/00cutecats-disinfo-promo/00cutecats-disinfo-promo-mediumSquareAt3X.png",
               ]}
             />
+            {isProfile && (
+              <View style={styles.buttonAndModalContainer}>
+                <TouchableOpacity
+                  style={{
+                    width: 42,
+                    height: 42,
+                    backgroundColor: "#fff",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                  }}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Icon
+                    name="file-edit"
+                    type="material-community"
+                    color="#3D7D6C"
+                    size={30}
+                  />
+                </TouchableOpacity>
+                <Modal
+                  isVisible={modalVisible}
+                  topDistance={52}
+                  onClose={() => setModalVisible(false)}
+                  buttons={[
+                    {
+                      text: "Edit Post",
+                      onPress: () =>
+                        navigation.navigate("CreatePost", {
+                          key: currentEditPost.key,
+                        }),
+                      color: "#3D7D6C",
+                    },
+                    {
+                      text: "I Found My Pet",
+                      onPress: () => {},
+                      color: "#3D7D6C",
+                    },
+                    {
+                      text: "Delete Post",
+                      onPress: async () => {
+                        dispatch(deletePost(currentEditPost));
+                        setModalVisible(false);
+                      },
+                      color: "#FF3131",
+                    },
+                  ]}
+                />
+              </View>
+            )}
           </View>
           <TouchableOpacity
             onPress={() => navigation.navigate("PostDetail", { key: item.key })}
@@ -93,45 +145,6 @@ const PostPreview = ({ posts, navigation, isProfile }) => {
                 {item.description}
               </Text>
             </View>
-            {isProfile ? (
-              <View>
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => toggleEditOverlay(item)}
-                >
-                  <Icon
-                    name="file-edit"
-                    type="material-community"
-                    color="#3D7D6C"
-                    size={30}
-                  />
-                </TouchableOpacity>
-                <Overlay
-                  isVisible={visible}
-                  onBackdropPress={toggleEditOverlay}
-                >
-                  <Button
-                    title="Update Post"
-                    color={"#3D7D6C"}
-                    style={{ marginBottom: 10 }}
-                    onPress={() => {
-                      navigation.navigate("CreatePost", {
-                        key: currentEditPost.key,
-                      });
-                      toggleEditOverlay();
-                    }}
-                  />
-                  <Button
-                    title="Delete Post"
-                    color={"#3D7D6C"}
-                    onPress={() => {
-                      dispatch(deletePost(currentEditPost));
-                      toggleEditOverlay();
-                    }}
-                  />
-                </Overlay>
-              </View>
-            ) : null}
           </TouchableOpacity>
         </View>
       )}
@@ -183,11 +196,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: "italic",
   },
-  editButton: {
+  buttonAndModalContainer: {
+    flex: 1,
+    height: 32,
+    position: "relative",
+    alignItems: "flex-end",
+    zIndex: 10,
     position: "absolute",
-    bottom: 120,
-    right: 5,
-    padding: 10,
+    top: 16,
+    right: 16,
   },
 });
 
