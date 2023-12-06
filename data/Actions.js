@@ -100,10 +100,7 @@ const loadPosts = () => {
         type: LOAD_POSTS,
         payload: {
           newPosts: newPosts.map((post) => ({
-            ...post,
-            postTime: post.postTime.seconds,
-            reportTime: post.reportTime.seconds,
-            updateTime: post.updateTime.seconds,
+            ...post,  
           })),
         },
       });
@@ -160,10 +157,9 @@ const updatePost =  (item, breed, typeValue, location, time, species, descriptio
         breed: breed,
         species: species,
         description: description,
-        postTime: time.seconds,
-        reportTime: time.seconds,
-        updateTime: time.seconds,
-        // invalid time
+        postTime: time,
+        reportTime: time,
+        updateTime: time,
         location: location,
         type: typeValue,
       }

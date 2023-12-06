@@ -27,7 +27,7 @@ function CreatePostScreen(props) {
 
   const [breed, setBreed] = useState(item?item.breed : "");
   const [species, setSpecies] = useState(item?item.species : "");
-  const [time, setTime] = useState(item?new Date(item.postTime * 1000) : new Date());
+  const [time, setTime] = useState(item?item.postTime : new Date().getTime()/1000);
   const [location, setLocation] = useState(item?item.location : "");
   const [description, setDescription] = useState(item?item.description : "");
   // const [geopoint, setGeopoint] = useState(null);
@@ -103,11 +103,11 @@ function CreatePostScreen(props) {
             />
             <Text style={styles.titleText}>Lost/Found Time</Text>
             <DateTimePicker
-              value={time}
+              value={new Date(time*1000)}
               mode="datetime"
               onChange={(event, selectedDate) => {
                 const currentDate = selectedDate || time;
-                setTime(currentDate);
+                setTime(new Date(currentDate).getTime()/1000);
               }}
             />
 
@@ -122,6 +122,7 @@ function CreatePostScreen(props) {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.postButton}
+              
               onPress={() => {
                 if (key === -1) {
                 dispatch(
