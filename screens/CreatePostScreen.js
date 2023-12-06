@@ -43,7 +43,26 @@ function CreatePostScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
+        <View style={styles.navigationBar}>
+          <Icon
+            name="arrow-left"
+            type="font-awesome"
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.headerText}>Create Post</Text>
+          </View>
           <View style={styles.formContainer}>
+          <Text style={styles.titleText}>Post Type</Text>
+            <DropDownPicker
+              style={styles.dropDown}
+              open={typeDropdownOpen}
+              value={typeValue}
+              items={types}
+              setOpen={setTypeDropdownOpen}
+              setValue={setTypeValue}
+              setItems={setTypes}
+              placeholder="Choose your post type"
+            />
           <Text style={styles.titleText}>Location</Text>
           <GooglePlacesAutocomplete
             placeholder={location?location:"Search Location"}
@@ -61,32 +80,17 @@ function CreatePostScreen(props) {
             styles={{
               textInputContainer: {
                 backgroundColor: "white",
-                width: "80%",
+                width: "100%",
                 margin: 12,
                 borderWidth: 1,
                 borderRadius: 5,
               },
-              textInput: {
-                height: 40,
-                color: "black",
-                fontSize: 16,
-              },
-              listView: {
-                height: "10%",
+              container: {
+                flex: 0,
               },
             }}
           />
-            <Text style={styles.titleText}>Post Type</Text>
-            <DropDownPicker
-              style={styles.dropDown}
-              open={typeDropdownOpen}
-              value={typeValue}
-              items={types}
-              setOpen={setTypeDropdownOpen}
-              setValue={setTypeValue}
-              setItems={setTypes}
-              placeholder="Choose your post type"
-            />
+            
             <Text style={styles.titleText}>Breed</Text>
             <TextInput
               style={styles.input}
@@ -175,7 +179,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     backgroundColor: "white",
-    height: 100,
+    height: 50,
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
@@ -193,7 +197,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   input: {
-    height: 45,
+    height: 50,
     margin: 10,
     borderWidth: 1,
     padding: 10,
