@@ -56,6 +56,7 @@ function PostDetailScreen(props) {
     hippo: "hippo",
     spider: "spider",
     insect: "locust",
+    dragon: "dragon",
   };
 
   return (
@@ -185,7 +186,7 @@ function PostDetailScreen(props) {
                 <Text style={styles.infoText}>{userInfo.contactPhone}</Text>
                 <TouchableOpacity
                   style={styles.copyBtn}
-                  onPress={() => copyToClipboard(userInfo.contactEmail)}
+                  onPress={() => copyToClipboard(userInfo.contactPhone)}
                 >
                   <Icon
                     name="content-copy"

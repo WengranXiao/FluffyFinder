@@ -3,6 +3,7 @@ const LOAD_USER_INFO = "LOAD_USER_INFO";
 const ADD_POST = "ADD_POST";
 const DELETE_POST = "DELETE_POST";
 const UPDATE_POST = "UPDATE_POST";
+const RESOLVE_POST = "RESOLVE_POST";
 
 const initialState = {
   user: [],
@@ -94,6 +95,17 @@ const updatePost = (
   };
 };
 
+const resolvePost = (state, itemId) => {
+  let { posts } = state;
+  let newPosts = posts.map((elem) =>
+    elem.key === itemId ? { ...elem, resolved: true } : elem
+  );
+  return {
+    ...state,
+    posts: newPosts,
+  };
+};
+
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
@@ -130,7 +142,8 @@ function rootReducer(state = initialState, action) {
         payload.species,
         payload.description
       );
-
+    case RESOLVE_POST:
+      return resolvePost(state, payload.key);
     default:
       return state;
   }
@@ -142,4 +155,5 @@ export {
   LOAD_USER_INFO,
   DELETE_POST,
   UPDATE_POST,
+  RESOLVE_POST,
 };

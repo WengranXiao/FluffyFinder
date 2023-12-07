@@ -22,6 +22,7 @@ import {
   LOAD_USER_INFO,
   DELETE_POST,
   UPDATE_POST,
+  RESOLVE_POST,
 } from "./Reducer";
 
 const app = initializeApp(firebaseConfig);
@@ -45,7 +46,7 @@ const loadUserInfo = (authUser) => {
     // console.log("dispatching with user", authUser, user);
     dispatch({
       type: LOAD_USER_INFO,
-      payload: { user },
+      payload: { user: { key: authUser.uid, ...user } },
     });
   };
 };
@@ -67,6 +68,8 @@ const updateUser = (user, updateInfo) => {
           contactEmail,
           contactPhone,
           profilePicUrl,
+          email: contactEmail,
+          key: user.uid,
         },
       },
     });
@@ -158,10 +161,9 @@ const resolvePost = (item) => {
       resolved: true,
     });
     dispatch({
-      type: UPDATE_POST,
+      type: RESOLVE_POST,
       payload: {
         key: item.key,
-        resolved: true,
       },
     });
   };
