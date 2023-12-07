@@ -6,10 +6,10 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Button, Icon, Overlay } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import ImageSwiper from "./ImageSwiper";
 import React, { useState } from "react";
-import { deletePost } from "../../data/Actions";
+import { deletePost, resolvePost } from "../../data/Actions";
 import { useDispatch } from "react-redux";
 import Modal from "./Modal";
 
@@ -39,12 +39,7 @@ const PostPreview = ({ posts, navigation, isProfile }) => {
               overflow: "hidden",
             }}
           >
-            <ImageSwiper
-              images={[
-                "https://headsupfortails.com/cdn/shop/articles/cat_sleeping_with_toy_large.jpg?v=1645094444",
-                "https://static01.nyt.com/images/2021/11/23/business/00cutecats-disinfo-promo/00cutecats-disinfo-promo-mediumSquareAt3X.png",
-              ]}
-            />
+            <ImageSwiper images={item.pictures} />
             {isProfile && (
               <View style={styles.buttonAndModalContainer}>
                 <TouchableOpacity
@@ -84,8 +79,9 @@ const PostPreview = ({ posts, navigation, isProfile }) => {
                       color: "#3D7D6C",
                     },
                     {
-                      text: "I Found My Pet",
+                      text: "Successfully Reunited!",
                       onPress: () => {
+                        dispatch(resolvePost(currentEditPost));
                         setModalVisible(false);
                       },
                       color: "#3D7D6C",

@@ -11,7 +11,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@rneui/themed";
-import { addPost, updatePost } from "../data/Actions";
+import { addPost, updatePost, saveProfilePic } from "../data/Actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import PhotoUpload from "../components/ui/PhotoUpload";
@@ -43,6 +43,52 @@ function CreatePostScreen({
   const [picList, setPicList] = useState([]);
 
   const dispatch = useDispatch();
+
+  handleUpdatePost = () => {
+    hanldeUploadPics().then((uploadedPicList) => {
+      // console.log("uploadedPicList", uploadedPicList);
+      dispatch(
+        updatePost(
+          item.key,
+          breed,
+          typeValue,
+          location,
+          time,
+          species,
+          description,
+          uploadedPicList
+        )
+      );
+
+      item
+        ? navigation.goBack()
+        : navigation.navigate("PostDetail", { key: item.key });
+    });
+  };
+
+  handleCreatePost = () => {
+    hanldeUploadPics().then((uploadedPicList) => {
+      addPost(
+        breed,
+        typeValue,
+        location,
+        time,
+        species,
+        description,
+        uploadedPicList,
+        user.key
+      );
+      navigation.navigate("Home");
+    });
+  };
+
+  hanldeUploadPics = async () => {
+    const uploadedPicList = await Promise.all(
+      picList.map((pic) => saveProfilePic({ uri: pic }))
+    );
+
+    return uploadedPicList;
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -238,38 +284,7 @@ function CreatePostScreen({
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.postButton}
-                onPress={() => {
-                  if (!item) {
-                    dispatch(
-                      addPost(
-                        breed,
-                        typeValue,
-                        location,
-                        time,
-                        species,
-                        description,
-                        user.key
-                      )
-                    );
-                    navigation.navigate("Home");
-                  } else {
-                    dispatch(
-                      updatePost(
-                        item.key,
-                        breed,
-                        typeValue,
-                        location,
-                        time,
-                        species,
-                        description
-                      )
-                    );
-
-                    item
-                      ? navigation.goBack()
-                      : navigation.navigate("PostDetail", { key: item.key });
-                  }
-                }}
+                onPress={() => (item ? handleUpdatePost() : handleCreatePost())}
               >
                 <Text style={styles.buttonText}>
                   {item ? "Update" : "Post"}

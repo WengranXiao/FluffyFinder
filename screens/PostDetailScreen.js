@@ -2,16 +2,15 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   Image,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getPostAuthorInfo } from "../data/Actions";
-import { Button, Icon } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import ImageSwiper from "../components/ui/ImageSwiper";
 
 function PostDetailScreen(props) {
@@ -54,12 +53,7 @@ function PostDetailScreen(props) {
                 />
               </TouchableOpacity>
             </View>
-            <ImageSwiper
-              images={[
-                "https://headsupfortails.com/cdn/shop/articles/cat_sleeping_with_toy_large.jpg?v=1645094444",
-                "https://static01.nyt.com/images/2021/11/23/business/00cutecats-disinfo-promo/00cutecats-disinfo-promo-mediumSquareAt3X.png",
-              ]}
-            />
+            <ImageSwiper images={selectedPost.pictures} />
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.titleText}>Breed</Text>

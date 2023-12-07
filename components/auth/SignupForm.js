@@ -39,7 +39,7 @@ const SignupForm = ({ toggleLoginMode, navigation }) => {
     }
 
     try {
-      const newUser = await signUp(displayName, email, password);
+      const newUser = await signUp(email, password, dispatch);
       dispatch(addUser(newUser));
       setPassword("");
       setConfirmPassword("");
@@ -70,8 +70,9 @@ const SignupForm = ({ toggleLoginMode, navigation }) => {
 
     try {
       const currentUser = await getAuthUser();
+      let uploadedPicUrl = null;
       if (profilePicUrl) {
-        dispatch(saveProfilePic({ uri: profilePicUrl }));
+        uploadedPicUrl = await saveProfilePic({ uri: profilePicUrl });
       }
       await updateProfile(currentUser, { displayName });
 
@@ -80,7 +81,7 @@ const SignupForm = ({ toggleLoginMode, navigation }) => {
           displayName: displayName,
           contactEmail: email || null,
           contactPhone: phone || null,
-          profilePicUrl: profilePicUrl || null,
+          profilePicUrl: uploadedPicUrl || null,
         })
       );
       setDisplayName("");

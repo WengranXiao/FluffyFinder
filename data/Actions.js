@@ -59,38 +59,37 @@ const updateUser = (user, updateInfo) => {
       contactPhone,
       profilePicUrl,
     });
+    dispatch({
+      type: LOAD_USER_INFO,
+      payload: {
+        user: {
+          displayName,
+          contactEmail,
+          contactPhone,
+          profilePicUrl,
+        },
+      },
+    });
   };
 };
 
-const saveProfilePic = (pictureObject) => {
-  return async (dispatch, getState) => {
-    const fileName = pictureObject.uri.split("/").pop();
-    // this will be where we store the file in the cloud
-    const currentPhotoRef = ref(storage, `images/${fileName}`);
+const saveProfilePic = async (pictureObject) => {
+  const fileName = pictureObject.uri.split("/").pop();
+  const currentPhotoRef = ref(storage, `images/${fileName}`);
 
-    try {
-      // fetch the image object (blob) from the local filesystem
-      const response = await fetch(pictureObject.uri);
+  try {
+    const response = await fetch(pictureObject.uri);
 
-      // blob: binary large object
-      const imageBlob = await response.blob();
+    const imageBlob = await response.blob();
 
-      // then upload it to Firebase Storage
-      await uploadBytes(currentPhotoRef, imageBlob);
+    await uploadBytes(currentPhotoRef, imageBlob);
 
-      // get the URL
-      const downloadURL = await getDownloadURL(currentPhotoRef);
+    const downloadURL = await getDownloadURL(currentPhotoRef);
 
-      // create or add to the user's gallery
-      const currentUser = getState().currentUser;
-      return {
-        ...pictureObject,
-        uri: downloadURL,
-      };
-    } catch (e) {
-      console.log("Error saving picture:", e);
-    }
-  };
+    return downloadURL;
+  } catch (e) {
+    console.log("Error saving picture:", e);
+  }
 };
 
 const loadPosts = () => {
@@ -114,31 +113,31 @@ const loadPosts = () => {
   };
 };
 
-const addPost = (
+const addPost = async (
   breed,
   typeValue,
   location,
   time,
   species,
   description,
+  picList,
   author
 ) => {
-  return async (dispatch) => {
-    const docRef = await addDoc(collection(db, "PostList"), {
-      breed: breed,
-      species: species,
-      description: description,
-      postTime: time,
-      reportTime: time,
-      updateTime: time,
-      location: location,
-      type: typeValue,
-      resolved: false,
-      author: author,
-    });
-    const id = docRef.id;
-    await updateDoc(doc(db, "PostList", id), { key: id });
-  };
+  const docRef = await addDoc(collection(db, "PostList"), {
+    breed: breed,
+    species: species,
+    description: description,
+    postTime: time,
+    reportTime: time,
+    updateTime: time,
+    location: location,
+    type: typeValue,
+    resolved: false,
+    author: author,
+    pictures: picList,
+  });
+  const id = docRef.id;
+  await updateDoc(doc(db, "PostList", id), { key: id });
 };
 
 const deletePost = (item) => {
@@ -153,6 +152,21 @@ const deletePost = (item) => {
   };
 };
 
+const resolvePost = (item) => {
+  return async (dispatch) => {
+    await updateDoc(doc(db, "PostList", item.key), {
+      resolved: true,
+    });
+    dispatch({
+      type: UPDATE_POST,
+      payload: {
+        key: item.key,
+        resolved: true,
+      },
+    });
+  };
+};
+
 const updatePost = (
   key,
   breed,
@@ -160,7 +174,8 @@ const updatePost = (
   location,
   time,
   species,
-  description
+  description,
+  picList
 ) => {
   return async (dispatch) => {
     await updateDoc(doc(db, "PostList", key), {
@@ -172,6 +187,7 @@ const updatePost = (
       updateTime: time,
       location: location,
       type: typeValue,
+      pictures: picList,
     });
     dispatch({
       type: UPDATE_POST,
@@ -185,6 +201,7 @@ const updatePost = (
         updateTime: time,
         location: location,
         type: typeValue,
+        pictures: picList,
       },
     });
   };
@@ -204,6 +221,7 @@ export {
   addPost,
   loadUserInfo,
   deletePost,
+  resolvePost,
   updatePost,
   getPostAuthorInfo,
 };
