@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, View, SafeAreaView } from "react-native";
 import { subscribeToAuthChanges } from "../AuthManager";
 import { useDispatch } from "react-redux";
 import SigninForm from "../components/auth/SigninForm";

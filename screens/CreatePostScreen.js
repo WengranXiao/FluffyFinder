@@ -15,6 +15,7 @@ import { addPost, updatePost, saveProfilePic } from "../data/Actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import PhotoUpload from "../components/ui/PhotoUpload";
+import { GOOGLE_API_KEY } from "../Secrets";
 // import DropDownPicker from "react-native-dropdown-picker";
 
 function CreatePostScreen({
@@ -180,7 +181,7 @@ function CreatePostScreen({
                   setLocation(data.description);
                 }}
                 query={{
-                  key: "AIzaSyAsBiGHdUmGB41gkhkVGiBH185EplwLX1c",
+                  key: GOOGLE_API_KEY,
                   language: "en",
                 }}
                 fetchDetails={true}

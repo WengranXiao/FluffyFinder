@@ -12,8 +12,8 @@ import {
 } from "react-native";
 import { updateProfile } from "firebase/auth";
 import { Icon } from "@rneui/themed";
-import { signUp, getAuthUser } from "../../AuthManager";
-import { addUser, updateUser, saveProfilePic } from "../../data/Actions";
+import { getAuthUser } from "../../AuthManager";
+import { updateUser, saveProfilePic } from "../../data/Actions";
 import { useDispatch, useSelector } from "react-redux";
 import PhotoUpload from "../ui/PhotoUpload";
 
@@ -119,8 +119,8 @@ const ProfileForm = ({ navigation }) => {
               underlineColorAndroid="transparent"
               value={phone}
               onChangeText={setPhone}
+              returnKeyType="done"
               placeholder="Enter your phone number"
-              autoCapitalize="none"
               placeholderTextColor="#A0C7B5"
               style={styles.inputText}
             />

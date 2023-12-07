@@ -102,12 +102,12 @@ export default function AppContainer() {
         <Stack.Screen
           name="Login"
           component={AuthScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen
           name="Main"
           component={MainTabNavigator}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, gestureEnabled: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

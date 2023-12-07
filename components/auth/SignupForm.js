@@ -175,7 +175,7 @@ const SignupForm = ({ toggleLoginMode, navigation }) => {
               keyboardType="email-address"
               autoCapitalize="none"
               placeholderTextColor="#A0C7B5"
-              style={{ fontSize: 18, marginLeft: 10 }}
+              style={styles.inputText}
             />
           </View>
           <TextInput />
@@ -192,10 +192,10 @@ const SignupForm = ({ toggleLoginMode, navigation }) => {
               underlineColorAndroid="transparent"
               value={phone}
               onChangeText={setPhone}
+              returnKeyType="done"
               placeholder="Enter your phone number"
-              autoCapitalize="none"
               placeholderTextColor="#A0C7B5"
-              style={{ fontSize: 18, marginLeft: 10 }}
+              style={styles.inputText}
             />
           </View>
 
@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 25,
     fontSize: 18,
+    backgroundColor: "#fff",
   },
   button: {
     backgroundColor: "#3D7D6C",
@@ -279,6 +280,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+  inputText: {
+    fontSize: 18,
+    marginLeft: 10,
+    width: "100%",
   },
 });
 
