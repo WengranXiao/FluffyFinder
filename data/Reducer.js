@@ -19,7 +19,7 @@ const loadPosts = (state, items) => {
 const loadUserInfo = (state, user) => {
   return {
     ...state,
-    user: { ...user },
+    user: { ...state.user, ...user },
   };
 };
 
