@@ -42,7 +42,7 @@ const loadUserInfo = (authUser) => {
   return async (dispatch) => {
     const userSnap = await getDoc(doc(db, "users", authUser.uid));
     const user = userSnap.data();
-    console.log("dispatching with user", authUser, user);
+    // console.log("dispatching with user", authUser, user);
     dispatch({
       type: LOAD_USER_INFO,
       payload: { user },
@@ -154,7 +154,7 @@ const deletePost = (item) => {
 };
 
 const updatePost = (
-  item,
+  key,
   breed,
   typeValue,
   location,
@@ -163,7 +163,7 @@ const updatePost = (
   description
 ) => {
   return async (dispatch) => {
-    await updateDoc(doc(db, "PostList", item.key), {
+    await updateDoc(doc(db, "PostList", key), {
       breed: breed,
       species: species,
       description: description,
@@ -176,7 +176,7 @@ const updatePost = (
     dispatch({
       type: UPDATE_POST,
       payload: {
-        key: item.key,
+        key: key,
         breed: breed,
         species: species,
         description: description,

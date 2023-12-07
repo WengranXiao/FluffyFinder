@@ -1,8 +1,8 @@
 const LOAD_POSTS = "LOAD_POSTS";
 const LOAD_USER_INFO = "LOAD_USER_INFO";
 const ADD_POST = "ADD_POST";
-const DELETE_POST = 'DELETE_POST';
-const UPDATE_POST = 'UPDATE_POST';
+const DELETE_POST = "DELETE_POST";
+const UPDATE_POST = "UPDATE_POST";
 
 const initialState = {
   user: [],
@@ -27,7 +27,7 @@ const addPost = (
   state,
   breed,
   time,
-  typeValue,
+  type,
   location,
   species,
   description,
@@ -43,7 +43,7 @@ const addPost = (
     species: species,
     description: description,
     location: location,
-    type: typeValue,
+    type: type,
     resolved: false,
   });
   return {
@@ -53,17 +53,26 @@ const addPost = (
 };
 
 const deletePost = (state, itemId) => {
-  let { posts } = state; 
-  let newPosts = posts.filter(elem => elem.key !== itemId);
+  let { posts } = state;
+  let newPosts = posts.filter((elem) => elem.key !== itemId);
   return {
-    ...state, 
-    posts: newPosts  
-  }
-}
-const updatePost = (state, itemId, breed, typeValue, location, time, species, description) => {
+    ...state,
+    posts: newPosts,
+  };
+};
+const updatePost = (
+  state,
+  itemId,
+  breed,
+  type,
+  location,
+  time,
+  species,
+  description
+) => {
   let { posts } = state;
   let newPost = {
-    key: itemId, 
+    key: itemId,
     breed: breed,
     species: species,
     description: description,
@@ -71,14 +80,17 @@ const updatePost = (state, itemId, breed, typeValue, location, time, species, de
     reportTime: time,
     updateTime: time,
     location: location,
-    type: typeValue,
+    type: type,
   };
-  let newPosts = posts.map(elem=>elem.key===itemId?newPost:elem);
+
+  let newPosts = posts.map((elem) =>
+    elem.key === itemId ? { ...elem, ...newPost } : elem
+  );
   return {
-    ...state, 
-    posts: newPosts
+    ...state,
+    posts: newPosts,
   };
-}
+};
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -95,7 +107,7 @@ function rootReducer(state = initialState, action) {
         payload.updateTime,
         payload.location,
         payload.breed,
-        payload.typeValue,
+        payload.type,
         payload.species,
         payload.description,
         payload.key,
@@ -108,7 +120,7 @@ function rootReducer(state = initialState, action) {
         state,
         payload.key,
         payload.breed,
-        payload.typeValue,
+        payload.type,
         payload.location,
         payload.time,
         payload.species,
@@ -119,4 +131,11 @@ function rootReducer(state = initialState, action) {
       return state;
   }
 }
-export { rootReducer, LOAD_POSTS, ADD_POST, LOAD_USER_INFO, DELETE_POST, UPDATE_POST };
+export {
+  rootReducer,
+  LOAD_POSTS,
+  ADD_POST,
+  LOAD_USER_INFO,
+  DELETE_POST,
+  UPDATE_POST,
+};

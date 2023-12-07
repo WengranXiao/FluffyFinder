@@ -4,7 +4,6 @@ import {
   View,
   Text,
   ScrollView,
-  FlatList,
   TextInput,
   TouchableOpacity,
   SafeAreaView,
@@ -15,10 +14,19 @@ import { Icon } from "@rneui/themed";
 import { addPost, updatePost } from "../data/Actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import DropDownPicker from "react-native-dropdown-picker";
 import PhotoUpload from "../components/ui/PhotoUpload";
+// import DropDownPicker from "react-native-dropdown-picker";
 
-function CreatePostScreen({ navigation, route: { key } }) {
+function CreatePostScreen({
+  navigation,
+  route: {
+    params: { key },
+  },
+}) {
+  const posts = useSelector((state) => state.posts);
+  const user = useSelector((state) => state.user);
+  const item = posts.find((post) => post.key === key);
+
   const [breed, setBreed] = useState(item ? item.breed : "");
   const [species, setSpecies] = useState(item ? item.species : "");
   const [time, setTime] = useState(
@@ -26,17 +34,14 @@ function CreatePostScreen({ navigation, route: { key } }) {
   );
   const [location, setLocation] = useState(item ? item.location : "");
   const [description, setDescription] = useState(item ? item.description : "");
-  const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
   const [typeValue, setTypeValue] = useState(item ? item.type : "");
-  const [types, setTypes] = useState([
-    { label: "I lost my pet", value: "lost" },
-    { label: "I found an unknown pet", value: "found" },
-  ]);
+  // const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
+  // const [types, setTypes] = useState([
+  //   { label: "I lost my pet", value: "lost" },
+  //   { label: "I found an unknown pet", value: "found" },
+  // ]);
   const [picList, setPicList] = useState([]);
 
-  const posts = useSelector((state) => state.posts);
-  const user = useSelector((state) => state.user);
-  const item = posts.find((post) => post.key === key);
   const dispatch = useDispatch();
 
   return (
@@ -250,7 +255,7 @@ function CreatePostScreen({ navigation, route: { key } }) {
                   } else {
                     dispatch(
                       updatePost(
-                        item,
+                        item.key,
                         breed,
                         typeValue,
                         location,
@@ -259,11 +264,16 @@ function CreatePostScreen({ navigation, route: { key } }) {
                         description
                       )
                     );
-                    navigation.navigate("PostDetail", { key: item.key });
+
+                    item
+                      ? navigation.goBack()
+                      : navigation.navigate("PostDetail", { key: item.key });
                   }
                 }}
               >
-                <Text style={styles.buttonText}>Post</Text>
+                <Text style={styles.buttonText}>
+                  {item ? "Update" : "Post"}
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
