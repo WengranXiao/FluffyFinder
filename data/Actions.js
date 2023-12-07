@@ -114,7 +114,15 @@ const loadPosts = () => {
   };
 };
 
-const addPost = (breed, typeValue, location, time, species, description) => {
+const addPost = (
+  breed,
+  typeValue,
+  location,
+  time,
+  species,
+  description,
+  author
+) => {
   return async (dispatch) => {
     const docRef = await addDoc(collection(db, "PostList"), {
       breed: breed,
@@ -126,6 +134,7 @@ const addPost = (breed, typeValue, location, time, species, description) => {
       location: location,
       type: typeValue,
       resolved: false,
+      author: author,
     });
     const id = docRef.id;
     await updateDoc(doc(db, "PostList", id), { key: id });

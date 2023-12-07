@@ -127,7 +127,7 @@ function PostDetailScreen(props) {
                     height: 74,
                     borderRadius: 37,
                     marginRight: 20,
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: "#3D7D6C",
                   }}
                 />
@@ -187,7 +187,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     position: "relative",
-    backgroundColor: "#fff",
   },
   navigationBar: {
     flexDirection: "row",

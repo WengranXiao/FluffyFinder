@@ -146,8 +146,9 @@ const SignupForm = ({ toggleLoginMode, navigation }) => {
         <>
           <Text style={styles.label}>Profile Pic (Optional)</Text>
           <PhotoUpload
-            profilePicUrl={profilePicUrl}
-            setProfilePicUrl={setProfilePicUrl}
+            picUrl={profilePicUrl}
+            setPicUrl={setProfilePicUrl}
+            borderStyle={{ width: 120, height: 120, borderRadius: 60 }}
           />
           <View style={styles.break} />
           <Text style={styles.label}>* Your Name</Text>

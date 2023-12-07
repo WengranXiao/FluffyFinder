@@ -1,17 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  Image,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
-import { Button, Icon } from "@rneui/themed";
+import { StyleSheet, View, SafeAreaView, TouchableOpacity } from "react-native";
+import { Icon } from "@rneui/themed";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { loadPosts, loadUserInfo } from "../data/Actions";
+import { useEffect } from "react";
+import { loadPosts } from "../data/Actions";
 import PostPreview from "../components/ui/PostPreview";
 
 const HomeScreen = (props) => {
@@ -26,10 +18,13 @@ const HomeScreen = (props) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <PostPreview navigation={navigation} posts={posts} />
+        <PostPreview
+          navigation={navigation}
+          posts={posts.filter((post) => !post.resolved)}
+        />
         <TouchableOpacity
           style={styles.createPostButton}
-          onPress={() => navigation.navigate("CreatePost",{key:-1})}
+          onPress={() => navigation.navigate("CreatePost", { key: -1 })}
         >
           <Icon name="plus" type="font-awesome" color="#fff" />
         </TouchableOpacity>

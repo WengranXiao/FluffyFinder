@@ -9,158 +9,266 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { CheckBox } from "@rneui/themed";
-import { Input, Button } from "@rneui/themed";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@rneui/themed";
 import { addPost, updatePost } from "../data/Actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import DropDownPicker from "react-native-dropdown-picker";
+import PhotoUpload from "../components/ui/PhotoUpload";
 
-function CreatePostScreen(props) {
-  const { navigation, route } = props;
-  const {key} = route.params;
-  const posts = useSelector((state) => state.posts);
-  const item = posts.find((post) => post.key === key);
-  const dispatch = useDispatch();
-
-  const [breed, setBreed] = useState(item?item.breed : "");
-  const [species, setSpecies] = useState(item?item.species : "");
-  const [time, setTime] = useState(item?item.postTime : new Date().getTime()/1000);
-  const [location, setLocation] = useState(item?item.location : "");
-  const [description, setDescription] = useState(item?item.description : "");
-  // const [geopoint, setGeopoint] = useState(null);
-
-
+function CreatePostScreen({ navigation, route: { key } }) {
+  const [breed, setBreed] = useState(item ? item.breed : "");
+  const [species, setSpecies] = useState(item ? item.species : "");
+  const [time, setTime] = useState(
+    item ? item.postTime : new Date().getTime() / 1000
+  );
+  const [location, setLocation] = useState(item ? item.location : "");
+  const [description, setDescription] = useState(item ? item.description : "");
   const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
-  const [typeValue, setTypeValue] = useState(item?item.type : "");
+  const [typeValue, setTypeValue] = useState(item ? item.type : "");
   const [types, setTypes] = useState([
     { label: "I lost my pet", value: "lost" },
     { label: "I found an unknown pet", value: "found" },
   ]);
+  const [picList, setPicList] = useState([]);
+
+  const posts = useSelector((state) => state.posts);
+  const user = useSelector((state) => state.user);
+  const item = posts.find((post) => post.key === key);
+  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.navigationBar}>
-          <Icon
-            name="arrow-left"
-            type="font-awesome"
-            onPress={() => navigation.goBack()}
-          />
-          <Text style={styles.headerText}>Create Post</Text>
-          </View>
-          <View style={styles.formContainer}>
-          <Text style={styles.titleText}>Post Type</Text>
-            <DropDownPicker
-              style={styles.dropDown}
-              open={typeDropdownOpen}
-              value={typeValue}
-              items={types}
-              setOpen={setTypeDropdownOpen}
-              setValue={setTypeValue}
-              setItems={setTypes}
-              placeholder="Choose your post type"
-            />
-          <Text style={styles.titleText}>Location</Text>
-          <GooglePlacesAutocomplete
-            placeholder={location?location:"Search Location"}
-            onPress={(data, details = null) => {
-              // console.log(data.description);
-              // console.log(details.geometry.location);
-              setLocation(data.description);
-              // setGeopoint(details.geometry.location);
-            }}
-            query={{
-              key: "AIzaSyAsBiGHdUmGB41gkhkVGiBH185EplwLX1c",
-              language: "en",
-            }}
-            fetchDetails={true}
-            styles={{
-              textInputContainer: {
-                backgroundColor: "white",
-                width: "100%",
-                margin: 12,
-                borderWidth: 1,
-                borderRadius: 5,
-              },
-              container: {
-                flex: 0,
-              },
-            }}
-          />
-            
-            
-            <Text style={styles.titleText}>Species</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setSpecies(text)}
-              value={species}
-              placeholder="Species"
-            />
-            <Text style={styles.titleText}>Breed</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setBreed(text)}
-              value={breed}
-              placeholder="Breed"
-            />
-            <Text style={styles.titleText}>Lost/Found Time</Text>
-            <DateTimePicker
-              value={new Date(time*1000)}
-              mode="datetime"
-              onChange={(event, selectedDate) => {
-                const currentDate = selectedDate || time;
-                setTime(new Date(currentDate).getTime()/1000);
-              }}
-            />
-
-            <Text style={styles.titleText}>Description</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setDescription(text)}
-              value={description}
-              placeholder="Description"
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.postButton}
-              
-              onPress={() => {
-                if (key === -1) {
-                dispatch(
-                  addPost(
-                    breed,
-                    typeValue,
-                    location,
-                    time,
-                    species,
-                    description
-                  )
-                );
-                navigation.navigate("Home");}
-                else {
-                  dispatch(
-                    updatePost(
-                      item,
-                      breed,
-                      typeValue,
-                      location,
-                      time,
-                      species,
-                      description
-                    )
-                  );
-                  navigation.navigate("PostDetail", { key: item.key });
-                }
-              }}
-            >
-              <Text style={styles.buttonText}>Post</Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.navigationBar}>
+        <TouchableOpacity
+          style={{
+            width: 40,
+            height: 40,
+            position: "absolute",
+            left: 0,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="arrow-left" type="font-awesome" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>{`${
+          item ? "Edit" : "Create"
+        } Post`}</Text>
       </View>
+      <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <ScrollView
+            style={styles.formContainer}
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled={true}
+          >
+            <View style={[styles.inputSection, { zIndex: 1 }]}>
+              <Text style={styles.titleText}>Post Type</Text>
+              <View style={{ flexDirection: "row", gap: 20 }}>
+                <TouchableOpacity
+                  onPress={() => setTypeValue("lost")}
+                  style={
+                    typeValue === "lost" ? styles.activeTypeBtn : styles.typeBtn
+                  }
+                >
+                  <Text
+                    style={
+                      typeValue === "lost"
+                        ? styles.activeTypeText
+                        : styles.typeText
+                    }
+                  >
+                    Lost Post
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setTypeValue("found")}
+                  style={
+                    typeValue === "found"
+                      ? styles.activeTypeBtn
+                      : styles.typeBtn
+                  }
+                >
+                  <Text
+                    style={
+                      typeValue === "found"
+                        ? styles.activeTypeText
+                        : styles.typeText
+                    }
+                  >
+                    Found Post
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/* <DropDownPicker
+                style={styles.dropDown}
+                open={typeDropdownOpen}
+                value={typeValue}
+                items={types}
+                setOpen={setTypeDropdownOpen}
+                setValue={setTypeValue}
+                setItems={setTypes}
+                placeholder="Choose your post type"
+                textStyle={{ fontSize: 20 }}
+              /> */}
+            </View>
+
+            <View style={styles.inputSection}>
+              <Text style={styles.titleText}>Location</Text>
+              <GooglePlacesAutocomplete
+                placeholder={location ? location : "Search Location"}
+                onPress={(data, details = null) => {
+                  console.log(data);
+                  setLocation(data.description);
+                }}
+                query={{
+                  key: "AIzaSyAsBiGHdUmGB41gkhkVGiBH185EplwLX1c",
+                  language: "en",
+                }}
+                fetchDetails={true}
+                scrollEnabled={false}
+                styles={{
+                  textInputContainer: {
+                    backgroundColor: "#fff",
+                    width: "100%",
+                    height: 50,
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    paddingRight: 1,
+                  },
+                  container: {
+                    flex: 0,
+                  },
+                  textInput: {
+                    fontSize: 20,
+                    height: "100%",
+                    width: "100%",
+                  },
+                }}
+              />
+            </View>
+
+            <View style={styles.inputSection}>
+              <Text style={styles.titleText}>Species</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => setSpecies(text)}
+                value={species}
+                placeholder="Species"
+              />
+            </View>
+
+            <View style={styles.inputSection}>
+              <Text style={styles.titleText}>Breed</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => setBreed(text)}
+                value={breed}
+                placeholder="Breed"
+              />
+            </View>
+
+            <View style={styles.inputSection}>
+              <Text style={styles.titleText}>Lost/Found Time</Text>
+              <View
+                style={{
+                  padding: 0,
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  marginLeft: -12,
+                }}
+              >
+                <DateTimePicker
+                  value={new Date(time * 1000)}
+                  mode="datetime"
+                  onChange={(event, selectedDate) => {
+                    const currentDate = selectedDate || time;
+                    setTime(new Date(currentDate).getTime() / 1000);
+                  }}
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputSection}>
+              <Text style={styles.titleText}>Description</Text>
+              <TextInput
+                style={[styles.input, { height: 100, paddingTop: 10 }]}
+                multiline={true}
+                onChangeText={(text) => setDescription(text)}
+                value={description}
+                placeholder="Description"
+              />
+            </View>
+
+            <View style={styles.inputSection}>
+              <Text style={styles.titleText}>Photo</Text>
+              <View style={styles.picList}>
+                {picList.map((picUrl, index) => (
+                  <View key={index}>
+                    <PhotoUpload
+                      picUrl={picUrl}
+                      setPicUrl={(uri) => setPicList((prev) => [...prev, uri])}
+                      removePic={(uri) =>
+                        setPicList((prev) => prev.filter((pic) => pic !== uri))
+                      }
+                      borderStyle={{ width: 90, height: 90, borderRadius: 5 }}
+                    />
+                  </View>
+                ))}
+                <PhotoUpload
+                  setPicUrl={(uri) => setPicList((prev) => [...prev, uri])}
+                  borderStyle={{ width: 90, height: 90, borderRadius: 5 }}
+                />
+              </View>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.postButton}
+                onPress={() => {
+                  if (!item) {
+                    dispatch(
+                      addPost(
+                        breed,
+                        typeValue,
+                        location,
+                        time,
+                        species,
+                        description,
+                        user.key
+                      )
+                    );
+                    navigation.navigate("Home");
+                  } else {
+                    dispatch(
+                      updatePost(
+                        item,
+                        breed,
+                        typeValue,
+                        location,
+                        time,
+                        species,
+                        description
+                      )
+                    );
+                    navigation.navigate("PostDetail", { key: item.key });
+                  }
+                }}
+              >
+                <Text style={styles.buttonText}>Post</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
@@ -171,52 +279,49 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   navigationBar: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
     width: "100%",
     padding: 10,
-    backgroundColor: "white",
-    height: 50,
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 2 },
   },
   headerText: {
     fontSize: 20,
     fontWeight: "bold",
-    position: "absolute",
-    left: 0,
-    right: 0,
     textAlign: "center",
   },
   titleText: {
     fontSize: 16,
     fontWeight: "bold",
   },
+  inputSection: {
+    flex: 1,
+    width: "100%",
+    marginBottom: 26,
+    gap: 16,
+  },
   input: {
     height: 50,
-    margin: 10,
     borderWidth: 1,
     padding: 10,
     width: "100%",
     borderRadius: 5,
+    backgroundColor: "#fff",
+    fontSize: 20,
   },
   dropDown: {
     width: "100%",
     height: 40,
-    margin: 10,
     borderRadius: 5,
+    marginBottom: 10,
   },
   formContainer: {
     flex: 1,
-    width: "85%",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    margin: "5%",
+    width: "100%",
+    paddingHorizontal: "7%",
+    paddingVertical: 10,
   },
   scroll: {
     flex: 1,
@@ -226,6 +331,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 20,
   },
   postButton: {
     width: 250,
@@ -237,8 +343,43 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    color: "white",
+    color: "#fff",
     fontSize: 20,
+  },
+  picList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    gap: 10,
+  },
+  typeBtn: {
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#000",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  activeTypeBtn: {
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3D7D6C",
+    borderWidth: 1,
+    borderColor: "#3D7D6C",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  typeText: {
+    fontSize: 18,
+    color: "#000",
+  },
+  activeTypeText: {
+    fontSize: 18,
+    color: "#fff",
   },
 });
 

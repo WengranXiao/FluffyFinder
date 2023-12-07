@@ -15,12 +15,15 @@ import PostPreview from "../components/ui/PostPreview";
 import Modal from "../components/ui/Modal";
 
 const ProfileScreen = ({ navigation, route }) => {
+  const isOtherUser = route?.params?.otherUser;
   const [tab, setTab] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const userInfo = useSelector((state) => state.user);
+  const userInfo = isOtherUser
+    ? isOtherUser
+    : useSelector((state) => state.user);
   const posts = useSelector((state) => state.posts);
 
-  const tabs = route?.params?.otherUser
+  const tabs = isOtherUser
     ? ["Pet Lost", "Pet Found"]
     : ["Pet Lost", "Pet Found", "Archived"];
 
@@ -36,7 +39,7 @@ const ProfileScreen = ({ navigation, route }) => {
           style={{
             marginBottom: 20,
             alignSelf: "flex-start",
-            display: route?.params?.otherUser ? "flex" : "none",
+            display: isOtherUser ? "flex" : "none",
           }}
         >
           <Icon name="arrow-left" type="font-awesome" />
@@ -59,7 +62,7 @@ const ProfileScreen = ({ navigation, route }) => {
                 height: 74,
                 borderRadius: 37,
                 marginRight: 20,
-                borderWidth: 2,
+                borderWidth: 1,
                 borderColor: "#3D7D6C",
               }}
             />
@@ -67,7 +70,7 @@ const ProfileScreen = ({ navigation, route }) => {
               {userInfo.displayName}
             </Text>
 
-            {!route?.params?.otherUser && (
+            {!isOtherUser && (
               <View style={styles.buttonAndModalContainer}>
                 <TouchableOpacity
                   onPress={() => setModalVisible(!modalVisible)}
@@ -124,7 +127,7 @@ const ProfileScreen = ({ navigation, route }) => {
                   style={{
                     position: "absolute",
                     right: 0,
-                    display: route?.params?.otherUser ? "flex" : "none",
+                    display: isOtherUser ? "flex" : "none",
                   }}
                 >
                   <Icon
@@ -151,7 +154,7 @@ const ProfileScreen = ({ navigation, route }) => {
                   style={{
                     position: "absolute",
                     right: 0,
-                    display: route?.params?.otherUser ? "flex" : "none",
+                    display: isOtherUser ? "flex" : "none",
                   }}
                 >
                   <Icon
@@ -201,8 +204,10 @@ const ProfileScreen = ({ navigation, route }) => {
             navigation={navigation}
             posts={posts.filter((post) =>
               tab === 2
-                ? post.resolved
-                : !post.resolved && post.type === tabMap[tab]
+                ? post.resolved && post.author === userInfo.key
+                : !post.resolved &&
+                  post.type === tabMap[tab] &&
+                  post.author === userInfo.key
             )}
             isProfile={!route?.params?.otherUser && tab !== 2}
           />
