@@ -66,21 +66,23 @@ const updatePost = (
   breed,
   type,
   location,
-  time,
+  postTime,
+  reportTime,
+  updateTime,
   species,
   description
 ) => {
   let { posts } = state;
   let newPost = {
     key: itemId,
-    breed: breed,
-    species: species,
-    description: description,
-    postTime: time,
-    reportTime: time,
-    updateTime: time,
-    location: location,
-    type: type,
+    breed,
+    species,
+    description,
+    postTime,
+    reportTime,
+    updateTime,
+    location,
+    type,
   };
 
   let newPosts = posts.map((elem) =>
@@ -122,7 +124,9 @@ function rootReducer(state = initialState, action) {
         payload.breed,
         payload.type,
         payload.location,
-        payload.time,
+        payload.postTime,
+        payload.reportTime,
+        payload.updateTime,
         payload.species,
         payload.description
       );

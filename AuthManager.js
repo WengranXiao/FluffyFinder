@@ -56,7 +56,7 @@ const subscribeToAuthChanges = (navigation, dispatch) => {
   unsubscribeFromAuthChanges = onAuthStateChanged(auth, (authUser) => {
     if (authUser?.displayName) {
       dispatch(loadUserInfo(authUser));
-      navigation.navigate("Main");
+      navigation.replace("Main");
     } else {
       navigation.navigate("Login", { loginMode: true });
     }

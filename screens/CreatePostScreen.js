@@ -40,13 +40,12 @@ function CreatePostScreen({
   //   { label: "I lost my pet", value: "lost" },
   //   { label: "I found an unknown pet", value: "found" },
   // ]);
-  const [picList, setPicList] = useState([]);
+  const [picList, setPicList] = useState(item ? item.pictures : []);
 
   const dispatch = useDispatch();
 
   handleUpdatePost = () => {
     hanldeUploadPics().then((uploadedPicList) => {
-      // console.log("uploadedPicList", uploadedPicList);
       dispatch(
         updatePost(
           item.key,
@@ -359,7 +358,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   postButton: {
-    width: 250,
+    width: "100%",
     height: 50,
     margin: 10,
     borderRadius: 5,
@@ -384,7 +383,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: "#000",
+    borderColor: "#aaa",
     borderRadius: 5,
     paddingHorizontal: 10,
   },
@@ -400,7 +399,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: 18,
-    color: "#000",
+    color: "#aaa",
   },
   activeTypeText: {
     fontSize: 18,

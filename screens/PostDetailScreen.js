@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { getPostAuthorInfo } from "../data/Actions";
 import { Icon } from "@rneui/themed";
 import ImageSwiper from "../components/ui/ImageSwiper";
+import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-root-toast";
 
 function PostDetailScreen(props) {
   const {
@@ -31,6 +33,31 @@ function PostDetailScreen(props) {
     });
   }, [key]);
 
+  const copyToClipboard = async (text) => {
+    await Clipboard.setStringAsync(text);
+    Toast.show("Copied to Clipboard!", {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      backgroundColor: "#3D7D6C",
+      shadowColor: "#3D7D6C",
+      opacity: 0.9,
+    });
+  };
+
+  const speciesMap = {
+    dog: "dog",
+    cat: "cat",
+    horse: "horse",
+    cow: "cow",
+    fish: "fish",
+    bird: "dove",
+    frog: "frog",
+    otter: "otter",
+    hippo: "hippo",
+    spider: "spider",
+    insect: "locust",
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -44,32 +71,34 @@ function PostDetailScreen(props) {
                 <Icon name="arrow-left" type="font-awesome" color="#fff" />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.btnArea} onPress={() => {}}>
+              {/* <TouchableOpacity style={styles.btnArea} onPress={() => {}}>
                 <Icon
                   name="dots-horizontal"
                   size={35}
                   type="material-community"
                   color="#fff"
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <ImageSwiper images={selectedPost.pictures} />
           </View>
           <View style={styles.infoContainer}>
+            <Text style={styles.titleText}>Species</Text>
+            <View style={styles.infoRow}>
+              <Icon
+                name={speciesMap[selectedPost.species.toLowerCase() || "dna"]}
+                type="font-awesome-5"
+                color="#3D7D6C"
+              />
+              <Text style={styles.infoText}>{selectedPost.species}</Text>
+            </View>
+
             <Text style={styles.titleText}>Breed</Text>
             <View style={styles.infoRow}>
               <Icon name="paw" type="material-community" color="#3D7D6C" />
               <Text style={styles.infoText}>{selectedPost.breed}</Text>
             </View>
-            <Text style={styles.titleText}>Species</Text>
-            <View style={styles.infoRow}>
-              <Icon
-                name="progress-question"
-                type="material-community"
-                color="#3D7D6C"
-              />
-              <Text style={styles.infoText}>{selectedPost.species}</Text>
-            </View>
+
             <Text style={styles.titleText}>Lost Time</Text>
             <View style={{ ...styles.infoRow }}>
               <Icon name="clock" type="material-community" color="#3D7D6C" />
@@ -77,6 +106,7 @@ function PostDetailScreen(props) {
                 {new Date(selectedPost.postTime * 1000).toLocaleString()}
               </Text>
             </View>
+
             <Text style={styles.titleText}>Lost Location</Text>
             <View style={styles.infoRow}>
               <Icon
@@ -86,6 +116,7 @@ function PostDetailScreen(props) {
               />
               <Text style={styles.infoText}>{selectedPost.location}</Text>
             </View>
+
             <Text style={styles.titleText}>Description</Text>
             <View style={styles.infoRow}>
               <Icon
@@ -135,7 +166,10 @@ function PostDetailScreen(props) {
               <View style={styles.infoRow}>
                 <Icon name="email" type="material-community" color="#3D7D6C" />
                 <Text style={styles.infoText}>{userInfo.contactEmail}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.copyBtn}
+                  onPress={() => copyToClipboard(userInfo.contactEmail)}
+                >
                   <Icon
                     name="content-copy"
                     type="material-community"
@@ -149,7 +183,10 @@ function PostDetailScreen(props) {
               <View style={styles.infoRow}>
                 <Icon name="phone" type="material-community" color="#3D7D6C" />
                 <Text style={styles.infoText}>{userInfo.contactPhone}</Text>
-                <TouchableOpacity style={styles.copyBtn}>
+                <TouchableOpacity
+                  style={styles.copyBtn}
+                  onPress={() => copyToClipboard(userInfo.contactEmail)}
+                >
                   <Icon
                     name="content-copy"
                     type="material-community"

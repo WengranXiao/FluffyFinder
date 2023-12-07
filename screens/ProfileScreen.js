@@ -8,16 +8,20 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { Button, Icon } from "@rneui/themed";
+import { Overlay, Icon } from "@rneui/themed";
 import { signOut } from "../AuthManager";
 import { useSelector } from "react-redux";
 import PostPreview from "../components/ui/PostPreview";
 import Modal from "../components/ui/Modal";
+import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-root-toast";
 
 const ProfileScreen = ({ navigation, route }) => {
   const isOtherUser = route?.params?.otherUser;
   const [tab, setTab] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+
   const userInfo = isOtherUser
     ? isOtherUser
     : useSelector((state) => state.user);
@@ -27,23 +31,33 @@ const ProfileScreen = ({ navigation, route }) => {
     ? ["Pet Lost", "Pet Found"]
     : ["Pet Lost", "Pet Found", "Archived"];
 
-  useEffect(() => {}, []);
+  const copyToClipboard = async (text) => {
+    await Clipboard.setStringAsync(text);
+    Toast.show("Copied to Clipboard!", {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      backgroundColor: "#3D7D6C",
+      shadowColor: "#3D7D6C",
+      opacity: 0.9,
+    });
+  };
 
   const tabMap = ["lost", "found"];
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            marginBottom: 20,
-            alignSelf: "flex-start",
-            display: isOtherUser ? "flex" : "none",
-          }}
-        >
-          <Icon name="arrow-left" type="font-awesome" />
-        </TouchableOpacity>
+        {isOtherUser && (
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              marginBottom: 20,
+              alignSelf: "flex-start",
+            }}
+          >
+            <Icon name="arrow-left" type="font-awesome" />
+          </TouchableOpacity>
+        )}
 
         <View style={styles.profileSection}>
           <View
@@ -95,13 +109,17 @@ const ProfileScreen = ({ navigation, route }) => {
                   buttons={[
                     {
                       text: "Edit Profile",
-                      onPress: () => navigation.navigate("ProfileEdit"),
+                      onPress: () => {
+                        navigation.navigate("ProfileEdit");
+                        setModalVisible(false);
+                      },
                       color: "#3D7D6C",
                     },
                     {
                       text: "Sign Out",
                       onPress: async () => {
                         try {
+                          setModalVisible(false);
                           await signOut();
                         } catch (error) {
                           Alert.alert("Sign Out Error", error.message, [
@@ -123,7 +141,7 @@ const ProfileScreen = ({ navigation, route }) => {
                 <Icon name="email" type="zocial" size={22} color="#3D7D6C" />
                 <Text style={{ fontSize: 16 }}>{userInfo.contactEmail}</Text>
                 <TouchableOpacity
-                  onPress={() => {}}
+                  onPress={() => copyToClipboard(userInfo.contactEmail)}
                   style={{
                     position: "absolute",
                     right: 0,
@@ -150,7 +168,7 @@ const ProfileScreen = ({ navigation, route }) => {
                 />
                 <Text style={{ fontSize: 16 }}>{userInfo.contactPhone}</Text>
                 <TouchableOpacity
-                  onPress={() => {}}
+                  onPress={() => copyToClipboard(userInfo.contactPhone)}
                   style={{
                     position: "absolute",
                     right: 0,
@@ -210,7 +228,43 @@ const ProfileScreen = ({ navigation, route }) => {
                   post.author === userInfo.key
             )}
             isProfile={!route?.params?.otherUser && tab !== 2}
+            showOverlay={() => setOverlayVisible(true)}
           />
+          <Overlay
+            isVisible={overlayVisible}
+            onBackdropPress={() => setOverlayVisible(false)}
+            overlayStyle={{
+              width: "80%",
+              padding: 30,
+              gap: 30,
+              borderRadius: 12,
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+              Congratulations!
+            </Text>
+            <View>
+              <Text style={{ fontSize: 16 }}>
+                Reunited at last! Let's keep our beloved pets safe and secure -
+                they're family. Treasure and protect them always.
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => setOverlayVisible(false)}
+              style={{
+                backgroundColor: "#3D7D6C",
+                borderRadius: 10,
+                paddingVertical: 12,
+                paddingHorizontal: 80,
+              }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#fff" }}>
+                Done
+              </Text>
+            </TouchableOpacity>
+          </Overlay>
         </View>
       </View>
     </SafeAreaView>

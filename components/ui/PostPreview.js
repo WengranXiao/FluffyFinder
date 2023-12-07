@@ -3,7 +3,6 @@ import {
   Text,
   View,
   FlatList,
-  Image,
   TouchableOpacity,
 } from "react-native";
 import { Icon } from "@rneui/themed";
@@ -13,7 +12,7 @@ import { deletePost, resolvePost } from "../../data/Actions";
 import { useDispatch } from "react-redux";
 import Modal from "./Modal";
 
-const PostPreview = ({ posts, navigation, isProfile }) => {
+const PostPreview = ({ posts, navigation, isProfile, showOverlay }) => {
   const [currentEditPost, setCurrentEditPost] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -83,6 +82,7 @@ const PostPreview = ({ posts, navigation, isProfile }) => {
                       onPress: () => {
                         dispatch(resolvePost(currentEditPost));
                         setModalVisible(false);
+                        showOverlay();
                       },
                       color: "#3D7D6C",
                     },

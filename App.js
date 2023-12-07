@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import AppContainer from "./AppContainer";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import { rootReducer } from "./data/Reducer";
 
@@ -11,9 +12,11 @@ const store = configureStore({
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <AppContainer />
-    </Provider>
+    <RootSiblingParent>
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    </RootSiblingParent>
   );
 }
 
