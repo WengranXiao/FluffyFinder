@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { loadPosts } from "../data/Actions";
 import PostPreview from "../components/ui/PostPreview";
-import { Dropdown } from 'react-native-element-dropdown';
+import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const HomeScreen = (props) => {
   const { navigation, route } = props;
@@ -15,6 +16,20 @@ const HomeScreen = (props) => {
   const [filterVisible, setFilterVisible] = useState(false);
   const [sortByTime, setSortByTime] = useState("Newest");
   const [sortedPosts, setSortedPosts] = useState(posts);
+  const [startTime, setStartTime] = useState(new Date().getTime() / 1000);
+  const [endTime, setEndTime] = useState(new Date().getTime() / 1000);
+  const [selectedSpecies, setSelectedSpecies] = useState("All");
+  const [speciesDropdownOpen, setSpeciesDropdownOpen] = useState(false);
+  const [species, setSpecies] = useState([
+    { label: "All", value: "All" },
+    { label: "Dog", value: "Dog" },
+    { label: "Cat", value: "Cat" },
+    { label: "Bird", value: "Bird" },
+    { label: "Hamster", value: "Hamster" },
+    { label: "Rabbit", value: "Rabbit" },
+    { label: "Reptile", value: "Reptile" },
+    { label: "Others", value: "Others" },
+  ]);
 
   useEffect(() => {
     dispatch(loadPosts());
@@ -76,12 +91,45 @@ const HomeScreen = (props) => {
                 <Text style={{...styles.sortByText, color: sortByTime === "Oldest"? "white": "black"}}>Oldest</Text>
               </TouchableOpacity>
             </View>
+
             <Text style={styles.titleText}>Species</Text>
-            
+              <DropDownPicker
+                open={speciesDropdownOpen}
+                value={selectedSpecies}
+                items={species}
+                setOpen={setSpeciesDropdownOpen}
+                setValue={setSelectedSpecies}
+                setItems={setSpecies}
+                placeholder="Choose pet species"
+                containerStyle={{width: "80%",margin:"3%"}}
+              />
+
             <Text style={styles.titleText}>Post Time</Text>
+              <View style={{flexDirection: "row", justifyContent: "space-around", alignItems: "center"}}>
+                <Text>From</Text>
+                <DateTimePicker
+                  value={new Date(startTime * 1000)}
+                  mode="datetime"
+                  onChange={(event, selectedDate) => {
+                    const currentDate = selectedDate || startTime;
+                    setStartTime(new Date(currentDate).getTime() / 1000);
+                  }}
+                />
+              </View>
+              <View style={{flexDirection: "row", justifyContent: "space-around", alignItems: "center"}}>
+                <Text>To</Text>
+                <DateTimePicker
+                  value={new Date(endTime * 1000)}
+                  mode="datetime"
+                  onChange={(event, selectedDate) => {
+                    const currentDate = selectedDate || endTime;
+                    setEndTime(new Date(currentDate).getTime() / 1000);
+                  }}
+                />
+              </View>
 
             <TouchableOpacity 
-                style={styles.sortByButton}
+                style={styles.applyButton}
                 onPress={()=>{
                   setSortedPosts(prevPosts => {
                     return [...prevPosts].sort((a, b) => sortByTime === 'Newest' ? b.postTime - a.postTime : a.postTime - b.postTime)
@@ -106,8 +154,9 @@ const HomeScreen = (props) => {
         />
         <TouchableOpacity
           style={styles.createPostButton}
-          // onPress={() => navigation.navigate("CreatePost", { key: -1 })}
-          onPress={() => console.log(sortedPosts.map((post) => post.postTime))}
+          onPress={() => navigation.navigate("CreatePost", { key: -1 })}
+          // onPress={() => console.log(sortedPosts.map((post) => post.postTime))}
+          // onPress={()=>{console.log(startTime, endTime)}}
         >
           <Icon name="plus" type="font-awesome" color="#fff" />
         </TouchableOpacity>
@@ -181,7 +230,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 16,
     fontWeight: "bold",
-    margin: "3%"
+    margin: "5%"
   },
   sortByButton: {
     height: 50,
@@ -192,12 +241,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#3D7D6C",
     borderRadius: 5,
-    margin: "3%"
+    marginHorizontal: "3%"
   },
   sortByText: {
     fontSize: 16,
     fontWeight: "normal",
     color: "#fff"
+  },
+  applyButton: {
+    height: 50,
+    width: 300,
+    marginHorizontal:"3%",
+    marginVertical:"10%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3D7D6C",
+    borderWidth: 1,
+    borderColor: "#3D7D6C",
+    borderRadius: 5,
   },
 
 });

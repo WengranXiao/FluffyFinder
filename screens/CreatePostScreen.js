@@ -16,7 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import PhotoUpload from "../components/ui/PhotoUpload";
 import { GOOGLE_API_KEY } from "../Secrets";
-// import DropDownPicker from "react-native-dropdown-picker";
+
 
 function CreatePostScreen({
   navigation,
@@ -36,11 +36,7 @@ function CreatePostScreen({
   const [location, setLocation] = useState(item ? item.location : "");
   const [description, setDescription] = useState(item ? item.description : "");
   const [typeValue, setTypeValue] = useState(item ? item.type : "");
-  // const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
-  // const [types, setTypes] = useState([
-  //   { label: "I lost my pet", value: "lost" },
-  //   { label: "I found an unknown pet", value: "found" },
-  // ]);
+
   const [picList, setPicList] = useState(item ? item.pictures : []);
 
   const dispatch = useDispatch();
@@ -159,17 +155,7 @@ function CreatePostScreen({
                   </Text>
                 </TouchableOpacity>
               </View>
-              {/* <DropDownPicker
-                style={styles.dropDown}
-                open={typeDropdownOpen}
-                value={typeValue}
-                items={types}
-                setOpen={setTypeDropdownOpen}
-                setValue={setTypeValue}
-                setItems={setTypes}
-                placeholder="Choose your post type"
-                textStyle={{ fontSize: 20 }}
-              /> */}
+
             </View>
 
             <View style={styles.inputSection}>
