@@ -115,7 +115,7 @@ const PostPreview = ({ posts, navigation, isProfile, showOverlay }) => {
                 style={{ marginLeft: -2 }}
                 color="#3D7D6C"
               />
-              <Text style={styles.infoText}>{item.location}</Text>
+              <Text style={styles.infoText}>{item.location.address}</Text>
             </View>
             <View style={{ ...styles.infoRow, marginTop: 20 }}>
               <Icon
@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   infoText: {
+    flex: 1,
     marginLeft: 8,
     fontSize: 16,
     paddingTop: 2,

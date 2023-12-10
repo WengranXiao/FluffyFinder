@@ -20,6 +20,7 @@
     "expo-camera": "~13.4.4",
     "expo-clipboard": "~4.3.1",
     "expo-image-picker": "~14.3.2",
+    "expo-location": "~16.1.0",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.6.0",
     "react": "18.2.0",
@@ -29,6 +30,8 @@
     "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-image-picker": "^7.0.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-map-clustering": "^3.4.2",
+    "react-native-maps": "^1.8.3",
     "react-native-root-toast": "^3.5.1",
     "react-native-swiper": "^1.6.0",
     "react-redux": "^8.1.3"

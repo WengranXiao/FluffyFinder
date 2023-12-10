@@ -31,11 +31,13 @@ export default function AppContainer() {
 
   // Function to create the profile stack with its screens
   function MapStackScreen() {
-    const ProfileStack = createNativeStackNavigator();
+    const MapStack = createNativeStackNavigator();
     return (
-      <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
-        <ProfileStack.Screen name="Map" component={MapScreen} />
-      </ProfileStack.Navigator>
+      <MapStack.Navigator screenOptions={{ headerShown: false }}>
+        <MapStack.Screen name="Map" component={MapScreen} />
+        <MapStack.Screen name="PostDetail" component={PostDetailScreen} />
+        <MapStack.Screen name="Profile" component={ProfileScreen} />
+      </MapStack.Navigator>
     );
   }
 

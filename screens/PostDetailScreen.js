@@ -115,7 +115,9 @@ function PostDetailScreen(props) {
                 type="material-community"
                 color="#3D7D6C"
               />
-              <Text style={styles.infoText}>{selectedPost.location}</Text>
+              <Text style={styles.infoText}>
+                {selectedPost.location.address}
+              </Text>
             </View>
 
             <Text style={styles.titleText}>Description</Text>

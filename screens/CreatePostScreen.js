@@ -175,10 +175,17 @@ function CreatePostScreen({
             <View style={styles.inputSection}>
               <Text style={styles.titleText}>Location</Text>
               <GooglePlacesAutocomplete
-                placeholder={location ? location : "Search Location"}
-                onPress={(data, details = null) => {
-                  console.log(data);
-                  setLocation(data.description);
+                placeholder={
+                  location.address ? location.address : "Search Location"
+                }
+                onPress={(data, details) => {
+                  const lat = details.geometry.location.lat;
+                  const lng = details.geometry.location.lng;
+                  setLocation({
+                    address: data.description,
+                    lat: lat,
+                    lng: lng,
+                  });
                 }}
                 query={{
                   key: GOOGLE_API_KEY,
