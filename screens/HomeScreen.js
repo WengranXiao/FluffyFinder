@@ -14,10 +14,14 @@ const HomeScreen = (props) => {
   const [typeValue, setTypeValue] = useState("lost");
   const [filterVisible, setFilterVisible] = useState(false);
   const [sortByTime, setSortByTime] = useState("Newest");
+  const [sortedPosts, setSortedPosts] = useState(posts);
 
   useEffect(() => {
     dispatch(loadPosts());
   }, []);
+  useEffect(() => {
+    setSortedPosts(posts);
+  }, [posts]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -78,7 +82,12 @@ const HomeScreen = (props) => {
 
             <TouchableOpacity 
                 style={styles.sortByButton}
-                // onPress={()=>{sortByTime==="Newest"?posts.sort((a, b) => b.postTime - a.postTime):posts.sort((a, b) => a.postTime - b.postTime); setFilterVisible(!filterVisible)}}
+                onPress={()=>{
+                  setSortedPosts(prevPosts => {
+                    return [...prevPosts].sort((a, b) => sortByTime === 'Newest' ? b.postTime - a.postTime : a.postTime - b.postTime)
+                  });
+                  setFilterVisible(!filterVisible);
+                }}
             >
               <Text style={styles.sortByText}>Apply</Text>
             </TouchableOpacity>
@@ -86,7 +95,7 @@ const HomeScreen = (props) => {
         </View>
         <PostPreview
           navigation={navigation}
-          posts={posts.filter((post) => {
+          posts={sortedPosts.filter((post) => {
             const lowerCaseSearch = search.toLowerCase();
             return !post.resolved && post.type === typeValue && 
                   ((post.breed?.toLowerCase().includes(lowerCaseSearch)) ||
@@ -97,8 +106,8 @@ const HomeScreen = (props) => {
         />
         <TouchableOpacity
           style={styles.createPostButton}
-          onPress={() => navigation.navigate("CreatePost", { key: -1 })}
-          // onPress={() => console.log(posts.map((post) => post.postTime))}
+          // onPress={() => navigation.navigate("CreatePost", { key: -1 })}
+          onPress={() => console.log(sortedPosts.map((post) => post.postTime))}
         >
           <Icon name="plus" type="font-awesome" color="#fff" />
         </TouchableOpacity>
