@@ -10,11 +10,20 @@ const ImageSwiper = ({ images }) => {
       activeDotColor="#3D7D6C"
       dotColor="#eee"
     >
-      {images.map((image, index) => (
-        <View key={index} style={styles.slide}>
-          <Image source={{ uri: image }} style={styles.image} />
+      {images.length ? (
+        images.map((image, index) => (
+          <View key={index} style={styles.slide}>
+            <Image source={{ uri: image }} style={styles.image} />
+          </View>
+        ))
+      ) : (
+        <View style={styles.slide}>
+          <Image
+            source={require("../../assets/lost_pets.png")}
+            style={styles.image}
+          />
         </View>
-      ))}
+      )}
     </Swiper>
   );
 };

@@ -101,12 +101,11 @@ const MapScreen = ({ navigation }) => {
           >
             <View style={styles.imgContainer}>
               <Image
-                source={{
-                  uri:
-                    post.pictures && post.pictures.length
-                      ? post.pictures[0]
-                      : "../assets/favicon.png",
-                }}
+                source={
+                  post.pictures && post.pictures.length
+                    ? { uri: post.pictures[0] }
+                    : require("../assets/lost_pets.png")
+                }
                 style={styles.image}
               />
             </View>
