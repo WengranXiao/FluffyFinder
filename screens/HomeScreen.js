@@ -149,7 +149,7 @@ const HomeScreen = (props) => {
                   ((post.breed?.toLowerCase().includes(lowerCaseSearch)) ||
                    (post.species?.toLowerCase().includes(lowerCaseSearch)) ||
                    (post.description?.toLowerCase().includes(lowerCaseSearch)) ||
-                   (post.location?.toLowerCase().includes(lowerCaseSearch)));
+                   (post.location.address?.toLowerCase().includes(lowerCaseSearch)));
           })}
         />
         <TouchableOpacity
