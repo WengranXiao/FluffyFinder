@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from "react-native";
 import { Icon } from "@rneui/themed";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import MapView from "react-native-map-clustering";
 import { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import {
-  Accuracy,
   requestForegroundPermissionsAsync,
   watchPositionAsync,
 } from "expo-location";
-import { GOOGLE_API_KEY } from "../Secrets";
 
 const MapScreen = ({ navigation }) => {
   const initRegion = {
@@ -20,10 +24,8 @@ const MapScreen = ({ navigation }) => {
   };
 
   const posts = useSelector((state) => state.posts);
-  const [location, setLocation] = useState(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const [mapRegion, setMapRegion] = useState(initRegion);
-  const [places, setPlaces] = useState([]);
 
   let unsubscribeFromLocation = null;
 
@@ -41,8 +43,6 @@ const MapScreen = ({ navigation }) => {
         // timeInterval: 1000, // 1000ms = 1s
       },
       (location) => {
-        setLocation(location);
-
         setMapRegion({
           ...mapRegion,
           latitude: location.coords.latitude,
@@ -84,34 +84,42 @@ const MapScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        region={mapRegion}
-        showsUserLocation={true}
-      >
-        {posts.map((post, key) => (
-          <Marker
-            key={key}
-            coordinate={{
-              latitude: post.location.lat,
-              longitude: post.location.lng,
-            }}
-            onPress={() => navigation.navigate("PostDetail", { key: post.key })}
-          >
-            <View style={styles.imgContainer}>
-              <Image
-                source={
-                  post.pictures && post.pictures.length
-                    ? { uri: post.pictures[0] }
-                    : require("../assets/lost_pets.png")
-                }
-                style={styles.image}
-              />
-            </View>
-          </Marker>
-        ))}
-      </MapView>
+      {permissionsGranted && (
+        <MapView
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          region={mapRegion}
+          showsUserLocation={true}
+        >
+          {posts.map((post, key) => (
+            <Marker
+              key={key}
+              coordinate={{
+                latitude: post.location.lat,
+                longitude: post.location.lng,
+              }}
+              onPress={() =>
+                navigation.navigate("PostDetail", { key: post.key })
+              }
+            >
+              <View style={styles.imgContainer}>
+                <ImageBackground
+                  source={require("../assets/lost_pets.png")}
+                  resizeMode="cover"
+                >
+                  <Image
+                    source={
+                      post.pictures &&
+                      post.pictures.length && { uri: post.pictures[0] }
+                    }
+                    style={styles.image}
+                  />
+                </ImageBackground>
+              </View>
+            </Marker>
+          ))}
+        </MapView>
+      )}
 
       <TouchableOpacity
         style={styles.filterButton}
