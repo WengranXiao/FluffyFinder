@@ -299,11 +299,10 @@ const styles = StyleSheet.create({
   },
   infoText: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 18,
     marginHorizontal: 10,
-    paddingTop: 3,
+    paddingTop: 1,
   },
-
   infoRow: {
     flex: 1,
     flexDirection: "row",
