@@ -8,7 +8,7 @@ import {
 import { Icon } from "@rneui/themed";
 import ImageSwiper from "./ImageSwiper";
 import React, { useState } from "react";
-import { deletePost, resolvePost } from "../../data/Actions";
+import { deletePost, resolvePost, setPostComments } from "../../data/Actions";
 import { useDispatch } from "react-redux";
 import Modal from "./Modal";
 
@@ -100,7 +100,10 @@ const PostPreview = ({ posts, navigation, isProfile, showOverlay }) => {
             )}
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate("PostDetail", { key: item.key })}
+            onPress={() => {
+              dispatch(setPostComments(item.key));
+              navigation.navigate("PostDetail", { key: item.key });
+            }}
             style={styles.cardInfo}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>

@@ -4,10 +4,12 @@ const ADD_POST = "ADD_POST";
 const DELETE_POST = "DELETE_POST";
 const UPDATE_POST = "UPDATE_POST";
 const RESOLVE_POST = "RESOLVE_POST";
+const SET_POST_COMMENTS = "SET_POST_COMMENTS";
 
 const initialState = {
   user: [],
   posts: [],
+  postComments: [],
 };
 
 const loadPosts = (state, items) => {
@@ -21,6 +23,13 @@ const loadUserInfo = (state, user) => {
   return {
     ...state,
     user: { ...state.user, ...user },
+  };
+};
+
+const setPostComments = (state, postComments) => {
+  return {
+    ...state,
+    postComments: postComments,
   };
 };
 
@@ -144,6 +153,8 @@ function rootReducer(state = initialState, action) {
       );
     case RESOLVE_POST:
       return resolvePost(state, payload.key);
+    case SET_POST_COMMENTS:
+      return setPostComments(state, payload.postComments);
     default:
       return state;
   }
@@ -156,4 +167,5 @@ export {
   DELETE_POST,
   UPDATE_POST,
   RESOLVE_POST,
+  SET_POST_COMMENTS,
 };

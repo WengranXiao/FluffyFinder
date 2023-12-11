@@ -10,6 +10,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import PostDetailScreen from "./screens/PostDetailScreen";
 import CreatePostScreen from "./screens/CreatePostScreen";
 import ProfileEditScreen from "./screens/ProfileEditScreen";
+import CreateCommentScreen from "./screens/CreateCommentScreen";
 
 export default function AppContainer() {
   // Create the stack and tab navigator
@@ -25,6 +26,10 @@ export default function AppContainer() {
         <HomeStack.Screen name="PostDetail" component={PostDetailScreen} />
         <HomeStack.Screen name="CreatePost" component={CreatePostScreen} />
         <HomeStack.Screen name="Profile" component={ProfileScreen} />
+        <HomeStack.Screen
+          name="CreateComment"
+          component={CreateCommentScreen}
+        />
       </HomeStack.Navigator>
     );
   }

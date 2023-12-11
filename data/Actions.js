@@ -23,11 +23,13 @@ import {
   DELETE_POST,
   UPDATE_POST,
   RESOLVE_POST,
+  SET_POST_COMMENTS,
 } from "./Reducer";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
+let commentSnapshotUnsub = undefined;
 
 const addUser = (user) => {
   return async (dispatch) => {
@@ -215,6 +217,44 @@ const getPostAuthorInfo = async (authorId) => {
   return user;
 };
 
+const setPostComments = (postId) => {
+  return async (dispatch) => {
+    if (commentSnapshotUnsub) {
+      commentSnapshotUnsub();
+      commentSnapshotUnsub = undefined;
+    }
+    const q = query(
+      collection(db, "PostList", postId, "comments"),
+      orderBy("timestamp", "desc")
+    );
+    commentSnapshotUnsub = onSnapshot(q, (querySnapshot) => {
+      const comments = querySnapshot.docs.map((docSnap) => ({
+        ...docSnap.data(),
+        timestamp: docSnap.data().timestamp.seconds,
+        key: docSnap.id,
+      }));
+      dispatch({
+        type: SET_POST_COMMENTS,
+        payload: {
+          postComments: comments,
+        },
+      });
+    });
+  };
+};
+
+const unsubscribeFromPostComments = () => {
+  if (commentSnapshotUnsub) {
+    commentSnapshotUnsub();
+    commentSnapshotUnsub = undefined;
+  }
+};
+
+const addComment = async (postId, commentInfo) => {
+  const commentsCollection = collection(db, "PostList", postId, "comments");
+  await addDoc(commentsCollection, commentInfo); // no need to dispatch
+};
+
 export {
   addUser,
   updateUser,
@@ -226,4 +266,7 @@ export {
   resolvePost,
   updatePost,
   getPostAuthorInfo,
+  setPostComments,
+  unsubscribeFromPostComments,
+  addComment,
 };

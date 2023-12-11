@@ -17,7 +17,6 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import PhotoUpload from "../components/ui/PhotoUpload";
 import { GOOGLE_API_KEY } from "../Secrets";
 
-
 function CreatePostScreen({
   navigation,
   route: {
@@ -155,7 +154,6 @@ function CreatePostScreen({
                   </Text>
                 </TouchableOpacity>
               </View>
-
             </View>
 
             <View style={styles.inputSection}>
@@ -328,12 +326,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#fff",
     fontSize: 20,
-  },
-  dropDown: {
-    width: "100%",
-    height: 40,
-    borderRadius: 5,
-    marginBottom: 10,
   },
   formContainer: {
     flex: 1,
