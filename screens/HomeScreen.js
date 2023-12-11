@@ -141,9 +141,6 @@ const HomeScreen = (props) => {
                     newSortedPosts.sort((a, b) => a.postTime - b.postTime );
                   } 
                   setSortedPosts(newSortedPosts);
-                  // setSortedPosts(prevPosts => {
-                  //   return [...prevPosts].sort((a, b) => sortByTime === 'Newest' ? b.postTime - a.postTime : a.postTime - b.postTime)
-                  // });
                   setFilterVisible(!filterVisible);
                 }}
             >
@@ -164,9 +161,9 @@ const HomeScreen = (props) => {
         />
         <TouchableOpacity
           style={styles.createPostButton}
-          // onPress={() => navigation.navigate("CreatePost", { key: -1 })}
+          onPress={() => navigation.navigate("CreatePost", { key: -1 })}
           // onPress={() => console.log(sortedPosts.map((post) => post.postTime))}
-          onPress={()=>{console.log(startTime, endTime)}}
+          // onPress={()=>{console.log(startTime, endTime)}}
         >
           <Icon name="plus" type="font-awesome" color="#fff" />
         </TouchableOpacity>
