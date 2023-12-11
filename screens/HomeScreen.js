@@ -16,7 +16,7 @@ const HomeScreen = (props) => {
   const [filterVisible, setFilterVisible] = useState(false);
   const [sortByTime, setSortByTime] = useState("Newest");
   const [sortedPosts, setSortedPosts] = useState(posts);
-  const [startTime, setStartTime] = useState(new Date().getTime() / 1000);
+  const [startTime, setStartTime] = useState(1449836880);
   const [endTime, setEndTime] = useState(new Date().getTime() / 1000);
   const [selectedSpecies, setSelectedSpecies] = useState("All");
   const [speciesDropdownOpen, setSpeciesDropdownOpen] = useState(false);
@@ -131,9 +131,19 @@ const HomeScreen = (props) => {
             <TouchableOpacity 
                 style={styles.applyButton}
                 onPress={()=>{
-                  setSortedPosts(prevPosts => {
-                    return [...prevPosts].sort((a, b) => sortByTime === 'Newest' ? b.postTime - a.postTime : a.postTime - b.postTime)
+                  const newSortedPosts = posts.filter((post) => {
+                    return (
+                      post.postTime >= startTime && post.postTime <= endTime);
                   });
+                  if(sortByTime === 'Newest') {
+                    newSortedPosts.sort((a, b) => b.postTime - a.postTime );
+                  } else {
+                    newSortedPosts.sort((a, b) => a.postTime - b.postTime );
+                  } 
+                  setSortedPosts(newSortedPosts);
+                  // setSortedPosts(prevPosts => {
+                  //   return [...prevPosts].sort((a, b) => sortByTime === 'Newest' ? b.postTime - a.postTime : a.postTime - b.postTime)
+                  // });
                   setFilterVisible(!filterVisible);
                 }}
             >
@@ -154,9 +164,9 @@ const HomeScreen = (props) => {
         />
         <TouchableOpacity
           style={styles.createPostButton}
-          onPress={() => navigation.navigate("CreatePost", { key: -1 })}
+          // onPress={() => navigation.navigate("CreatePost", { key: -1 })}
           // onPress={() => console.log(sortedPosts.map((post) => post.postTime))}
-          // onPress={()=>{console.log(startTime, endTime)}}
+          onPress={()=>{console.log(startTime, endTime)}}
         >
           <Icon name="plus" type="font-awesome" color="#fff" />
         </TouchableOpacity>
