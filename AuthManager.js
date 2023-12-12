@@ -2,7 +2,6 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  updateProfile,
   signOut as fbSignOut,
   initializeAuth,
   getReactNativePersistence,

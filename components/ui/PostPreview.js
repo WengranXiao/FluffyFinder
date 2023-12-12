@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { Icon } from "@rneui/themed";
 import ImageSwiper from "./ImageSwiper";
-import React, { useState } from "react";
+import { useState } from "react";
 import { deletePost, resolvePost, setPostComments } from "../../data/Actions";
 import { useDispatch } from "react-redux";
 import Modal from "./Modal";

@@ -18,7 +18,7 @@ const AuthScreen = ({ route, navigation }) => {
     setLoginMode(route.params?.loginMode);
   }, [route.params?.loginMode]);
 
-  toggleLoginMode = () => {
+  const toggleLoginMode = () => {
     setLoginMode(!loginMode);
   };
 
