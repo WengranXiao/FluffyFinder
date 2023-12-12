@@ -30,7 +30,6 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
     { label: "Hamster", value: "Hamster" },
     { label: "Rabbit", value: "Rabbit" },
     { label: "Reptile", value: "Reptile" },
-    { label: "Others", value: "Others" },
   ]);
 
   return (
@@ -158,7 +157,9 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
           style={styles.applyButton}
           onPress={() => {
             const newSortedPosts = posts.filter((post) => {
-              return post.postTime >= startTime && post.postTime <= endTime;
+              return post.postTime >= startTime && 
+                     post.postTime <= endTime && 
+                     (selectedSpecies === 'All' || post.species.toLowerCase() === selectedSpecies.toLowerCase());
             });
             if (sortByTime === "Newest") {
               newSortedPosts.sort((a, b) => b.postTime - a.postTime);

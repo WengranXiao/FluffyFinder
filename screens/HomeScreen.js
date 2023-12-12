@@ -17,7 +17,7 @@ const HomeScreen = (props) => {
   const posts = useSelector((state) => state.posts);
   const dispatch = useDispatch();
   const [typeValue, setTypeValue] = useState("lost");
-  const [sortedPosts, setSortedPosts] = useState([]);
+  const [sortedPosts, setSortedPosts] = useState(null);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const HomeScreen = (props) => {
 
         <PostPreview
           navigation={navigation}
-          posts={(sortedPosts.length ? sortedPosts : posts).filter((post) => {
+          posts={(sortedPosts === null ? posts : sortedPosts).filter((post) => {
             const lowerCaseSearch = search.toLowerCase();
             const isRelevantPost = !post.resolved && post.type === typeValue;
 
