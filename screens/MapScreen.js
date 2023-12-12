@@ -13,87 +13,93 @@ import { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import {
   requestForegroundPermissionsAsync,
   watchPositionAsync,
+  Accuracy,
 } from "expo-location";
+import MapFilterOverlay from "../components/ui/MapFilterOverlay";
 
 const MapScreen = ({ navigation }) => {
   const initRegion = {
+    location: "",
     latitude: 37.78825,
     longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
   };
 
   const posts = useSelector((state) => state.posts);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const [mapRegion, setMapRegion] = useState(initRegion);
-
-  let unsubscribeFromLocation = null;
-
-  const subscribeToLocation = async () => {
-    let { status } = await requestForegroundPermissionsAsync();
-    setPermissionsGranted(status === "granted");
-
-    if (unsubscribeFromLocation) {
-      unsubscribeFromLocation();
-    }
-    unsubscribeFromLocation = await watchPositionAsync(
-      {
-        // accuracy: Accuracy.Highest,
-        // distanceInterval: 1, // 1 meter
-        // timeInterval: 1000, // 1000ms = 1s
-      },
-      (location) => {
-        setMapRegion({
-          ...mapRegion,
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      }
-    );
-  };
+  const [filterVisible, setFilterVisible] = useState(false);
+  const [distance, setDistance] = useState(1000);
+  const [sortedPosts, setSortedPosts] = useState(posts);
 
   useEffect(() => {
+    let unsubscribeFromLocation = null;
+
+    const subscribeToLocation = async () => {
+      let { status } = await requestForegroundPermissionsAsync();
+      setPermissionsGranted(status === "granted");
+
+      if (status === "granted") {
+        unsubscribeFromLocation = await watchPositionAsync(
+          {
+            accuracy: Accuracy.Balanced,
+            // distanceInterval: 1, // 1 meter
+            // timeInterval: 1000, // 1000ms = 1s
+          },
+          (location) => {
+            setMapRegion({
+              ...mapRegion,
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            });
+          }
+        );
+      }
+    };
+
     subscribeToLocation();
   }, []);
 
-  // const searchLocations = async () => {
-  //   let placesURI =
-  //     "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-  //   placesURI += "location=" + location.coords.latitude;
-  //   placesURI += "%2C" + location.coords.longitude;
-  //   placesURI += "&type=restaurant";
-  //   placesURI += "&radius=5000"; // 5km
-  //   placesURI += "&key=" + GOOGLE_API_KEY;
-
-  //   console.log(placesURI);
-  //   let response = await fetch(placesURI);
-  //   let results = await response.json();
-
-  //   let newPlaces = [];
-  //   for (let r of results.results) {
-  //     let newPlace = {};
-  //     newPlace.latitude = r.geometry.location.lat;
-  //     newPlace.longitude = r.geometry.location.lng;
-  //     newPlace.name = r.name;
-  //     newPlace.id = r.place_id;
-  //     newPlaces.push(newPlace);
-  //   }
-  //   console.log(newPlaces);
-  //   setPlaces(newPlaces);
-  // };
+  const filterPostsBasedOnRegion = (region) => {
+    const visiblePosts = sortedPosts.filter((post) => {
+      return (
+        post.location.lat >= region.latitude - region.latitudeDelta / 2 &&
+        post.location.lat <= region.latitude + region.latitudeDelta / 2 &&
+        post.location.lng >= region.longitude - region.longitudeDelta / 2 &&
+        post.location.lng <= region.longitude + region.longitudeDelta / 2
+      );
+    });
+    setSortedPosts(visiblePosts);
+  };
 
   return (
     <View style={styles.container}>
+      <MapFilterOverlay
+        mapRegion={mapRegion}
+        setMapRegion={setMapRegion}
+        distance={distance}
+        setDistance={setDistance}
+        filterVisible={filterVisible}
+        setFilterVisible={setFilterVisible}
+        setSortedPosts={setSortedPosts}
+      />
       {permissionsGranted && (
         <MapView
           style={styles.map}
           provider={PROVIDER_GOOGLE}
-          region={mapRegion}
+          region={{
+            latitude: mapRegion.latitude,
+            longitude: mapRegion.longitude,
+            latitudeDelta: mapRegion.latitudeDelta,
+            longitudeDelta: mapRegion.longitudeDelta,
+          }}
+          onRegionChangeComplete={filterPostsBasedOnRegion}
           showsUserLocation={true}
         >
-          {posts.map((post, key) => (
+          {sortedPosts.map((post) => (
             <Marker
-              key={key}
+              key={post.key}
               coordinate={{
                 latitude: post.location.lat,
                 longitude: post.location.lng,
@@ -123,7 +129,7 @@ const MapScreen = ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.filterButton}
-        // onPress={() => navigation.navigate("CreatePost", { key: -1 })}
+        onPress={() => setFilterVisible(true)}
       >
         <Icon name="filter" type="material-community" color="#fff" />
       </TouchableOpacity>
@@ -140,7 +146,12 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 24,
   },
-
+  filterWindow: {
+    width: "80%",
+    borderRadius: 10,
+    padding: "5%",
+    gap: 24,
+  },
   map: {
     flex: 1,
     width: "100%",
@@ -180,6 +191,21 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     borderRadius: 2,
+  },
+  applyButton: {
+    height: 50,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#fff",
+    backgroundColor: "#3D7D6C",
+    borderWidth: 1,
+    borderColor: "#3D7D6C",
+    borderRadius: 5,
+  },
+  applyButtonText: {
+    fontSize: 18,
+    color: "#fff",
   },
 });
 

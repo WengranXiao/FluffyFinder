@@ -98,7 +98,7 @@ function PostDetailScreen(props) {
             <Text style={styles.titleText}>Species</Text>
             <View style={styles.infoRow}>
               <Icon
-                name={speciesMap[selectedPost.species.toLowerCase() || "dna"]}
+                name={speciesMap[selectedPost.species.toLowerCase()] || "dna"}
                 type="font-awesome-5"
                 color="#3D7D6C"
               />
