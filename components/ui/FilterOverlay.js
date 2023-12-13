@@ -53,10 +53,10 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
     }
     setSortedPosts(newSortedPosts);
     setFilterVisible(false);
-    setFilterOn(true);
   };
 
   handleReset = () => {
+    setSortedPosts(posts.sort((a, b) => b.postTime - a.postTime));
     setStartTime(oneMonthAgo.getTime() / 1000);
     setEndTime(new Date().getTime() / 1000);
     setSelectedSpecies("All");
@@ -180,7 +180,10 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
 
         <TouchableOpacity
           style={styles.applyButton}
-          onPress={() => handleApplyChanges()}
+          onPress={() => {
+            handleApplyChanges();
+            setFilterOn(true);
+          }}
         >
           <Text style={styles.activeSortByText}>Apply</Text>
         </TouchableOpacity>
