@@ -3,9 +3,9 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Image,
   ImageBackground,
 } from "react-native";
+import { Image } from "expo-image";
 import { Icon } from "@rneui/themed";
 import { useSelector } from "react-redux";
 import MapView from "react-native-map-clustering";
@@ -32,32 +32,34 @@ const MapScreen = ({ navigation }) => {
   const [filterVisible, setFilterVisible] = useState(false);
   const [distance, setDistance] = useState(1000);
   const [sortedPosts, setSortedPosts] = useState(posts);
+  const [visiblePosts, setVisiblePosts] = useState(posts);
+
+  let unsubscribeFromLocation = null;
+
+  const subscribeToLocation = async () => {
+    let { status } = await requestForegroundPermissionsAsync();
+    setPermissionsGranted(status === "granted");
+
+    if (unsubscribeFromLocation) {
+      unsubscribeFromLocation();
+    }
+    unsubscribeFromLocation = await watchPositionAsync(
+      {
+        accuracy: Accuracy.Highest,
+        // distanceInterval: 1, // 1 meter
+        // timeInterval: 1000, // 1000ms = 1s
+      },
+      (location) => {
+        setMapRegion({
+          ...mapRegion,
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      }
+    );
+  };
 
   useEffect(() => {
-    let unsubscribeFromLocation = null;
-
-    const subscribeToLocation = async () => {
-      let { status } = await requestForegroundPermissionsAsync();
-      setPermissionsGranted(status === "granted");
-
-      if (status === "granted") {
-        unsubscribeFromLocation = await watchPositionAsync(
-          {
-            accuracy: Accuracy.Balanced,
-            // distanceInterval: 1, // 1 meter
-            // timeInterval: 1000, // 1000ms = 1s
-          },
-          (location) => {
-            setMapRegion({
-              ...mapRegion,
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            });
-          }
-        );
-      }
-    };
-
     subscribeToLocation();
   }, []);
 
@@ -70,7 +72,7 @@ const MapScreen = ({ navigation }) => {
         post.location.lng <= region.longitude + region.longitudeDelta / 2
       );
     });
-    setSortedPosts(visiblePosts);
+    setVisiblePosts(visiblePosts);
   };
 
   return (
@@ -97,7 +99,7 @@ const MapScreen = ({ navigation }) => {
           onRegionChangeComplete={filterPostsBasedOnRegion}
           showsUserLocation={true}
         >
-          {sortedPosts.map((post) => (
+          {visiblePosts.map((post) => (
             <Marker
               key={post.key}
               coordinate={{
@@ -115,8 +117,7 @@ const MapScreen = ({ navigation }) => {
                 >
                   <Image
                     source={
-                      post.pictures &&
-                      post.pictures.length && { uri: post.pictures[0] }
+                      post.pictures && post.pictures.length && post.pictures[0]
                     }
                     style={styles.image}
                   />

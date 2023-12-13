@@ -2,11 +2,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import { Image } from "expo-image";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
@@ -158,9 +158,7 @@ function PostDetailScreen(props) {
                 }
               >
                 <Image
-                  source={{
-                    uri: userInfo.profilePicUrl,
-                  }}
+                  source={userInfo.profilePicUrl}
                   style={{
                     width: 74,
                     height: 74,
@@ -177,37 +175,37 @@ function PostDetailScreen(props) {
             </View>
 
             {userInfo.contactEmail && (
-              <View style={styles.infoRow}>
+              <TouchableOpacity
+                style={styles.infoRow}
+                onPress={() => copyToClipboard(userInfo.contactEmail)}
+              >
                 <Icon name="email" type="material-community" color="#3D7D6C" />
                 <Text style={styles.infoText}>{userInfo.contactEmail}</Text>
-                <TouchableOpacity
-                  style={styles.copyBtn}
-                  onPress={() => copyToClipboard(userInfo.contactEmail)}
-                >
+                <View style={styles.copyBtn}>
                   <Icon
                     name="content-copy"
                     type="material-community"
                     color="#3D7D6C"
                   />
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             )}
 
             {userInfo.contactPhone && (
-              <View style={styles.infoRow}>
+              <TouchableOpacity
+                style={styles.infoRow}
+                onPress={() => copyToClipboard(userInfo.contactPhone)}
+              >
                 <Icon name="phone" type="material-community" color="#3D7D6C" />
                 <Text style={styles.infoText}>{userInfo.contactPhone}</Text>
-                <TouchableOpacity
-                  style={styles.copyBtn}
-                  onPress={() => copyToClipboard(userInfo.contactPhone)}
-                >
+                <View style={styles.copyBtn}>
                   <Icon
                     name="content-copy"
                     type="material-community"
                     color="#3D7D6C"
                   />
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             )}
 
             <View style={styles.line} />
@@ -218,13 +216,14 @@ function PostDetailScreen(props) {
               style={{
                 width: "100%",
                 flexDirection: "row",
-                justifyContent: "space-between",
+                // justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
-              <Text style={styles.titleText}>Comments</Text>
-              <Text style={{ fontSize: 16 }}>
-                {postComments.length > 0 ? postComments.length : ""}
+              <Text style={styles.titleText}>
+                {`Comments (${
+                  postComments.length > 0 ? postComments.length : ""
+                })`}
               </Text>
             </View>
             {postComments.length ? (

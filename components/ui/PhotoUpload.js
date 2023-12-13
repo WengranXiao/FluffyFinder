@@ -1,4 +1,5 @@
-import { View, TouchableOpacity, Image, Alert, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { Icon } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
@@ -68,7 +69,7 @@ function PhotoUpload({ picUrl, setPicUrl, removePic, borderStyle }) {
     >
       {picUrl ? (
         <>
-          <Image source={{ uri: picUrl }} style={borderStyle} />
+          <Image source={picUrl} style={borderStyle} />
           {removePic && (
             <View
               style={{

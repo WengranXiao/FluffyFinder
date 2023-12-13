@@ -27,6 +27,7 @@ const MapFilterOverlay = ({
   const [tempMapRegion, setTempMapRegion] = useState(mapRegion);
   const [startTime, setStartTime] = useState(oneMonthAgo.getTime() / 1000);
   const [endTime, setEndTime] = useState(now.getTime() / 1000);
+  const [typeValue, setTypeValue] = useState("");
   const [selectedSpecies, setSelectedSpecies] = useState("All");
   const [speciesDropdownOpen, setSpeciesDropdownOpen] = useState(false);
   const [species, setSpecies] = useState([
@@ -48,17 +49,19 @@ const MapFilterOverlay = ({
       return (
         post.postTime >= startTime &&
         post.postTime <= endTime &&
-        (selectedSpecies === "All" ||
-          post.species.toLowerCase() === selectedSpecies.toLowerCase())
+        (!typeValue || post.type === typeValue)(
+          selectedSpecies === "All" ||
+            post.species.toLowerCase() === selectedSpecies.toLowerCase()
+        )
       );
     });
-
     setSortedPosts(newSortedPosts);
     setMapRegion(tempMapRegion);
     setFilterVisible(false);
     setTempMapRegion(mapRegion);
     setStartTime(oneMonthAgo.getTime() / 1000);
     setEndTime(now.getTime() / 1000);
+    setTypeValue("");
     setSelectedSpecies("All");
     setSpeciesDropdownOpen(false);
   };
@@ -75,6 +78,7 @@ const MapFilterOverlay = ({
           setTempMapRegion(mapRegion);
           setStartTime(oneMonthAgo.getTime() / 1000);
           setEndTime(now.getTime() / 1000);
+          setTypeValue("");
           setSelectedSpecies("All");
           setSpeciesDropdownOpen(false);
           setSortedPosts(posts);
@@ -84,6 +88,43 @@ const MapFilterOverlay = ({
       >
         <Text style={styles.resetText}>Reset</Text>
       </TouchableOpacity>
+
+      <View style={styles.inputSection}>
+        <Text style={styles.titleText}>Post Type</Text>
+        <View style={styles.typeContainer}>
+          <TouchableOpacity
+            style={
+              typeValue === "lost" ? styles.activeTypeButton : styles.typeButton
+            }
+            onPress={() => setTypeValue("lost")}
+          >
+            <Text
+              style={
+                typeValue === "lost" ? styles.activeTypeText : styles.typeText
+              }
+            >
+              Lost
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={
+              typeValue === "found"
+                ? styles.activeTypeButton
+                : styles.typeButton
+            }
+            onPress={() => setTypeValue("found")}
+          >
+            <Text
+              style={
+                typeValue === "found" ? styles.activeTypeText : styles.typeText
+              }
+            >
+              Found
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <View style={styles.inputSection}>
         <Text style={styles.titleText}>Location</Text>
         <GooglePlacesAutocomplete
@@ -191,32 +232,70 @@ const styles = StyleSheet.create({
     width: "80%",
     borderRadius: 10,
     padding: "5%",
-    gap: 24,
+    gap: 12,
   },
   resetBtn: {
     width: "100%",
     alignItems: "flex-end",
+  },
+  typeContainer: {
+    flexDirection: "row",
+    gap: 20,
   },
   resetText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#3D7D6C",
   },
+  typeButton: {
+    height: 50,
+    width: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#aaa",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  activeTypeButton: {
+    height: 50,
+    width: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3D7D6C",
+    borderWidth: 1,
+    borderColor: "#3D7D6C",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  typeText: {
+    fontSize: 18,
+    color: "#aaa",
+  },
+  activeTypeText: {
+    fontSize: 18,
+    color: "#fff",
+  },
   inputSection: {
     marginBottom: 15,
+    gap: 8,
   },
   titleText: {
-    fontSize: 18,
-    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   timeSpan: {
+    width: "100%",
     flexDirection: "row",
+    justifyContent: "space-around",
     alignItems: "center",
-    marginBottom: 10,
+    justifyContent: "space-around",
   },
   timeTitle: {
+    flex: 1,
+    textAlign: "right",
     fontSize: 16,
-    marginRight: 10,
   },
   filterButton: {
     position: "absolute",

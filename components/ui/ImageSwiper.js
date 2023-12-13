@@ -1,4 +1,5 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import Swiper from "react-native-swiper";
 
 const ImageSwiper = ({ images }) => {

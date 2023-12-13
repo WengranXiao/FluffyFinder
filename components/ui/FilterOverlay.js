@@ -1,7 +1,7 @@
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Icon, SearchBar, Overlay } from "@rneui/themed";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -32,10 +32,39 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
     { label: "Reptile", value: "Reptile" },
   ]);
 
+  useEffect(() => {
+    handleApplyChanges();
+  }, [posts]);
+
+  handleApplyChanges = () => {
+    const newSortedPosts = posts.filter((post) => {
+      return (
+        post.postTime >= startTime &&
+        post.postTime <= endTime &&
+        (selectedSpecies === "All" ||
+          post.species.toLowerCase() === selectedSpecies.toLowerCase())
+      );
+    });
+    if (sortByTime === "Newest") {
+      newSortedPosts.sort((a, b) => b.postTime - a.postTime);
+    } else {
+      newSortedPosts.sort((a, b) => a.postTime - b.postTime);
+    }
+    setSortedPosts(newSortedPosts);
+    setFilterVisible(false);
+  };
+
+  handleReset = () => {
+    setStartTime(oneMonthAgo.getTime() / 1000);
+    setEndTime(new Date().getTime() / 1000);
+    setSelectedSpecies("All");
+    setSortByTime("Newest");
+  };
+
   return (
     <View style={styles.filterContainer}>
       <SearchBar
-        placeholder="Search Posts"
+        placeholder="Search for keywords or contents"
         onChangeText={(text) => setSearch(text)}
         value={search}
         lightTheme={true}
@@ -56,21 +85,13 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
         visible={filterVisible}
         onBackdropPress={() => setFilterVisible(!filterVisible)}
       >
-        <TouchableOpacity
-          style={styles.resetBtn}
-          onPress={() => {
-            setStartTime(oneMonthAgo.getTime() / 1000);
-            setEndTime(new Date().getTime() / 1000);
-            setSelectedSpecies("All");
-            setSortByTime("Newest");
-          }}
-        >
+        <TouchableOpacity style={styles.resetBtn} onPress={() => handleReset()}>
           <Text style={styles.resetText}>Reset</Text>
         </TouchableOpacity>
 
         <View style={styles.inputSection}>
           <Text style={styles.titleText}>Sort by</Text>
-          <View style={styles.typeContainer}>
+          <View style={styles.sortByContainer}>
             <TouchableOpacity
               style={
                 sortByTime === "Newest"
@@ -155,20 +176,7 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
 
         <TouchableOpacity
           style={styles.applyButton}
-          onPress={() => {
-            const newSortedPosts = posts.filter((post) => {
-              return post.postTime >= startTime && 
-                     post.postTime <= endTime && 
-                     (selectedSpecies === 'All' || post.species.toLowerCase() === selectedSpecies.toLowerCase());
-            });
-            if (sortByTime === "Newest") {
-              newSortedPosts.sort((a, b) => b.postTime - a.postTime);
-            } else {
-              newSortedPosts.sort((a, b) => a.postTime - b.postTime);
-            }
-            setSortedPosts(newSortedPosts);
-            setFilterVisible(!filterVisible);
-          }}
+          onPress={() => handleApplyChanges()}
         >
           <Text style={styles.activeSortByText}>Apply</Text>
         </TouchableOpacity>
@@ -178,7 +186,7 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
 };
 
 const styles = StyleSheet.create({
-  typeContainer: {
+  sortByContainer: {
     flexDirection: "row",
     gap: 20,
   },
@@ -195,10 +203,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#3D7D6C",
-  },
-  typeBtn: {
-    borderBottomWidth: 0,
-    margin: "5%",
   },
   searchBarContainer: {
     width: "90%",
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
   },
   inputSection: {
     width: "100%",
-    gap: 16,
+    gap: 8,
   },
   titleText: {
     fontSize: 16,

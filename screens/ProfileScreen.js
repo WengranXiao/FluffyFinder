@@ -4,10 +4,10 @@ import {
   Text,
   View,
   Alert,
-  Image,
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import { Image } from "expo-image";
 import { Overlay, Icon } from "@rneui/themed";
 import { signOut } from "../AuthManager";
 import { useSelector } from "react-redux";
@@ -70,7 +70,7 @@ const ProfileScreen = ({ navigation, route }) => {
             }}
           >
             <Image
-              source={{ uri: userInfo.profilePicUrl }}
+              source={userInfo.profilePicUrl}
               style={{
                 width: 74,
                 height: 74,
@@ -137,11 +137,13 @@ const ProfileScreen = ({ navigation, route }) => {
 
           <View>
             {userInfo.contactEmail && (
-              <View style={styles.contactLine}>
+              <TouchableOpacity
+                style={styles.contactLine}
+                onPress={() => copyToClipboard(userInfo.contactEmail)}
+              >
                 <Icon name="email" type="zocial" size={22} color="#3D7D6C" />
                 <Text style={{ fontSize: 16 }}>{userInfo.contactEmail}</Text>
-                <TouchableOpacity
-                  onPress={() => copyToClipboard(userInfo.contactEmail)}
+                <View
                   style={{
                     position: "absolute",
                     right: 0,
@@ -154,21 +156,25 @@ const ProfileScreen = ({ navigation, route }) => {
                     color="#3D7D6C"
                     size={24}
                   />
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             )}
 
             {userInfo.contactPhone && (
-              <View style={styles.contactLine}>
+              <TouchableOpacity style={styles.contactLine}>
                 <Icon
                   name="phone-alt"
                   type="font-awesome-5"
                   size={22}
                   color="#3D7D6C"
                 />
-                <Text style={{ fontSize: 16 }}>{userInfo.contactPhone}</Text>
-                <TouchableOpacity
+                <Text
+                  style={{ fontSize: 16 }}
                   onPress={() => copyToClipboard(userInfo.contactPhone)}
+                >
+                  {userInfo.contactPhone}
+                </Text>
+                <View
                   style={{
                     position: "absolute",
                     right: 0,
@@ -181,8 +187,8 @@ const ProfileScreen = ({ navigation, route }) => {
                     color="#3D7D6C"
                     size={24}
                   />
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             )}
           </View>
         </View>
