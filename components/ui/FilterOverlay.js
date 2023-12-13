@@ -16,6 +16,7 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
     now.getSeconds()
   );
   const posts = useSelector((state) => state.posts);
+  const [filterOn, setFilterOn] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [sortByTime, setSortByTime] = useState("Newest");
   const [startTime, setStartTime] = useState(oneMonthAgo.getTime() / 1000);
@@ -52,6 +53,7 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
     }
     setSortedPosts(newSortedPosts);
     setFilterVisible(false);
+    setFilterOn(true);
   };
 
   handleReset = () => {
@@ -59,6 +61,8 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
     setEndTime(new Date().getTime() / 1000);
     setSelectedSpecies("All");
     setSortByTime("Newest");
+    setFilterVisible(false);
+    setFilterOn(false);
   };
 
   return (
@@ -73,7 +77,7 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
       />
       <TouchableOpacity onPress={() => setFilterVisible(!filterVisible)}>
         <Icon
-          name="filter-variant"
+          name={filterOn ? "filter-outline" : "filter-off-outline"}
           type="material-community"
           color="#3D7D6C"
           size={30}

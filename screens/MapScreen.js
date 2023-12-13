@@ -33,6 +33,8 @@ const MapScreen = ({ navigation }) => {
   const [distance, setDistance] = useState(1000);
   const [sortedPosts, setSortedPosts] = useState(posts);
   const [visiblePosts, setVisiblePosts] = useState(posts);
+  const [filterOn, setFilterOn] = useState(false);
+  const [region, setRegion] = useState(initRegion);
 
   let unsubscribeFromLocation = null;
 
@@ -63,16 +65,22 @@ const MapScreen = ({ navigation }) => {
     subscribeToLocation();
   }, []);
 
-  const filterPostsBasedOnRegion = (region) => {
-    const visiblePosts = sortedPosts.filter((post) => {
+  const filterPostsBasedOnRegion = (newPosts, newRegion) => {
+    const compareRegion = newRegion || region;
+    const visiblePosts = newPosts.filter((post) => {
       return (
-        post.location.lat >= region.latitude - region.latitudeDelta / 2 &&
-        post.location.lat <= region.latitude + region.latitudeDelta / 2 &&
-        post.location.lng >= region.longitude - region.longitudeDelta / 2 &&
-        post.location.lng <= region.longitude + region.longitudeDelta / 2
+        post.location.lat >=
+          compareRegion.latitude - compareRegion.latitudeDelta / 2 &&
+        post.location.lat <=
+          compareRegion.latitude + compareRegion.latitudeDelta / 2 &&
+        post.location.lng >=
+          compareRegion.longitude - compareRegion.longitudeDelta / 2 &&
+        post.location.lng <=
+          compareRegion.longitude + compareRegion.longitudeDelta / 2
       );
     });
     setVisiblePosts(visiblePosts);
+    newRegion && setRegion(newRegion);
   };
 
   return (
@@ -85,6 +93,8 @@ const MapScreen = ({ navigation }) => {
         filterVisible={filterVisible}
         setFilterVisible={setFilterVisible}
         setSortedPosts={setSortedPosts}
+        filterPostsBasedOnRegion={filterPostsBasedOnRegion}
+        setFilterOn={setFilterOn}
       />
       {permissionsGranted && (
         <MapView
@@ -96,7 +106,9 @@ const MapScreen = ({ navigation }) => {
             latitudeDelta: mapRegion.latitudeDelta,
             longitudeDelta: mapRegion.longitudeDelta,
           }}
-          onRegionChangeComplete={filterPostsBasedOnRegion}
+          onRegionChangeComplete={(newRegion) =>
+            filterPostsBasedOnRegion(sortedPosts, newRegion)
+          }
           showsUserLocation={true}
         >
           {visiblePosts.map((post) => (
@@ -129,10 +141,14 @@ const MapScreen = ({ navigation }) => {
       )}
 
       <TouchableOpacity
-        style={styles.filterButton}
+        style={filterOn ? styles.filterButtonOn : styles.filterButtonOff}
         onPress={() => setFilterVisible(true)}
       >
-        <Icon name="filter" type="material-community" color="#fff" />
+        <Icon
+          name={filterOn ? "filter-outline" : "filter-off-outline"}
+          type="material-community"
+          color={filterOn ? "#fff" : "#3D7D6C"}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -158,8 +174,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-
-  filterButton: {
+  filterButtonOn: {
     position: "absolute",
     right: 25,
     bottom: 16,
@@ -169,6 +184,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#3D7D6C",
+    borderWidth: 1,
+    borderColor: "#3D7D6C",
+  },
+  filterButtonOff: {
+    position: "absolute",
+    right: 25,
+    bottom: 16,
+    width: 54,
+    height: 54,
+    borderRadius: 7,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#3D7D6C",
   },
   shadowContainer: {
     width: 80,

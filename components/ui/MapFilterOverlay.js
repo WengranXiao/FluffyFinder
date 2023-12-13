@@ -13,6 +13,8 @@ const MapFilterOverlay = ({
   filterVisible,
   setFilterVisible,
   setSortedPosts,
+  filterPostsBasedOnRegion,
+  setFilterOn,
 }) => {
   const now = new Date();
   const oneMonthAgo = new Date(
@@ -49,20 +51,16 @@ const MapFilterOverlay = ({
       return (
         post.postTime >= startTime &&
         post.postTime <= endTime &&
-        (!typeValue || post.type === typeValue)(
-          selectedSpecies === "All" ||
-            post.species.toLowerCase() === selectedSpecies.toLowerCase()
-        )
+        (!typeValue || post.type === typeValue) &&
+        (selectedSpecies === "All" ||
+          post.species.toLowerCase() === selectedSpecies.toLowerCase())
       );
     });
+    setFilterOn(true);
     setSortedPosts(newSortedPosts);
+    filterPostsBasedOnRegion(newSortedPosts);
     setMapRegion(tempMapRegion);
     setFilterVisible(false);
-    setTempMapRegion(mapRegion);
-    setStartTime(oneMonthAgo.getTime() / 1000);
-    setEndTime(now.getTime() / 1000);
-    setTypeValue("");
-    setSelectedSpecies("All");
     setSpeciesDropdownOpen(false);
   };
 
@@ -82,8 +80,10 @@ const MapFilterOverlay = ({
           setSelectedSpecies("All");
           setSpeciesDropdownOpen(false);
           setSortedPosts(posts);
+          filterPostsBasedOnRegion(posts);
           setMapRegion(mapRegion);
           setFilterVisible(false);
+          setFilterOn(false);
         }}
       >
         <Text style={styles.resetText}>Reset</Text>
