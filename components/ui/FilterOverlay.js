@@ -77,7 +77,7 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
       />
       <TouchableOpacity onPress={() => setFilterVisible(!filterVisible)}>
         <Icon
-          name={filterOn ? "filter-outline" : "filter-off-outline"}
+          name={filterOn ? "filter-check" : "filter-off-outline"}
           type="material-community"
           color="#3D7D6C"
           size={30}
