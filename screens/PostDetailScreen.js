@@ -217,7 +217,13 @@ function PostDetailScreen(props) {
             {postComments.length ? (
               postComments.map((comment, index) => (
                 <View key={index} style={styles.commentSection}>
-                  <TouchableOpacity onPress={() => {}}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Profile", {
+                        otherUser: comment.authorInfo,
+                      })
+                    }
+                  >
                     <Image
                       source={comment.authorInfo.profilePicUrl}
                       style={styles.commentAuthorPic}

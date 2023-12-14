@@ -161,19 +161,17 @@ const ProfileScreen = ({ navigation, route }) => {
             )}
 
             {userInfo.contactPhone && (
-              <TouchableOpacity style={styles.contactLine}>
+              <TouchableOpacity
+                style={styles.contactLine}
+                onPress={() => copyToClipboard(userInfo.contactPhone)}
+              >
                 <Icon
                   name="phone-alt"
                   type="font-awesome-5"
                   size={22}
                   color="#3D7D6C"
                 />
-                <Text
-                  style={{ fontSize: 16 }}
-                  onPress={() => copyToClipboard(userInfo.contactPhone)}
-                >
-                  {userInfo.contactPhone}
-                </Text>
+                <Text style={{ fontSize: 16 }}>{userInfo.contactPhone}</Text>
                 <View
                   style={{
                     position: "absolute",

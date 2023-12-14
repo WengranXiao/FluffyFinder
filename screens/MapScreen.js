@@ -7,7 +7,8 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { Icon } from "@rneui/themed";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setPostComments } from "../data/Actions";
 import MapView from "react-native-map-clustering";
 import { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import {
@@ -18,6 +19,7 @@ import {
 import MapFilterOverlay from "../components/ui/MapFilterOverlay";
 
 const MapScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const initRegion = {
     location: "",
     latitude: 37.78825,
@@ -118,9 +120,10 @@ const MapScreen = ({ navigation }) => {
                 latitude: post.location.lat,
                 longitude: post.location.lng,
               }}
-              onPress={() =>
-                navigation.navigate("PostDetail", { key: post.key })
-              }
+              onPress={() => {
+                dispatch(setPostComments(post.key));
+                navigation.navigate("PostDetail", { key: post.key });
+              }}
             >
               <View style={styles.imgContainer}>
                 <ImageBackground

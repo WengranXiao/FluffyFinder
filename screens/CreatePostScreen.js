@@ -11,7 +11,12 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@rneui/themed";
-import { addPost, updatePost, saveProfilePic } from "../data/Actions";
+import {
+  addPost,
+  updatePost,
+  saveProfilePic,
+  setPostComments,
+} from "../data/Actions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import PhotoUpload from "../components/ui/PhotoUpload";
@@ -55,9 +60,12 @@ function CreatePostScreen({
         )
       );
 
-      item
-        ? navigation.goBack()
-        : navigation.navigate("PostDetail", { key: item.key });
+      if (item) {
+        navigation.goBack();
+      } else {
+        dispatch(setPostComments(item.key));
+        navigation.navigate("PostDetail", { key: item.key });
+      }
     });
   };
 
