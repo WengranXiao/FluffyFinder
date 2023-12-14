@@ -45,7 +45,6 @@ const loadUserInfo = (authUser) => {
   return async (dispatch) => {
     const userSnap = await getDoc(doc(db, "users", authUser.uid));
     const user = userSnap.data();
-    // console.log("dispatching with user", authUser, user);
     dispatch({
       type: LOAD_USER_INFO,
       payload: { user: { key: authUser.uid, ...user } },
@@ -227,16 +226,25 @@ const setPostComments = (postId) => {
       collection(db, "PostList", postId, "comments"),
       orderBy("timestamp", "desc")
     );
-    commentSnapshotUnsub = onSnapshot(q, (querySnapshot) => {
-      const comments = querySnapshot.docs.map((docSnap) => ({
-        ...docSnap.data(),
-        timestamp: docSnap.data().timestamp.seconds,
-        key: docSnap.id,
-      }));
+
+    commentSnapshotUnsub = onSnapshot(q, async (querySnapshot) => {
+      const commentsPromises = querySnapshot.docs.map(async (docSnap) => {
+        const commentData = docSnap.data();
+        const userDoc = await getDoc(doc(db, "users", commentData.author));
+
+        return {
+          ...commentData,
+          timestamp: commentData.timestamp.seconds,
+          authorInfo: userDoc.data(),
+        };
+      });
+
+      const commentsWithUser = await Promise.all(commentsPromises);
+
       dispatch({
         type: SET_POST_COMMENTS,
         payload: {
-          postComments: comments,
+          postComments: commentsWithUser,
         },
       });
     });

@@ -81,15 +81,6 @@ function PostDetailScreen(props) {
               >
                 <Icon name="arrow-left" type="font-awesome" color="#fff" />
               </TouchableOpacity>
-
-              {/* <TouchableOpacity style={styles.btnArea} onPress={() => {}}>
-                <Icon
-                  name="dots-horizontal"
-                  size={35}
-                  type="material-community"
-                  color="#fff"
-                />
-              </TouchableOpacity> */}
             </View>
             <ImageSwiper images={selectedPost.pictures} />
           </View>
@@ -216,28 +207,27 @@ function PostDetailScreen(props) {
               style={{
                 width: "100%",
                 flexDirection: "row",
-                // justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
               <Text style={styles.titleText}>
-                {`Comments (${
-                  postComments.length > 0 ? postComments.length : ""
-                })`}
+                {`Comments (${postComments && postComments.length})`}
               </Text>
             </View>
             {postComments.length ? (
               postComments.map((comment, index) => (
                 <View key={index} style={styles.commentSection}>
-                  <View>
+                  <TouchableOpacity onPress={() => {}}>
                     <Image
-                      source={{ uri: comment.authorPic }}
+                      source={comment.authorInfo.profilePicUrl}
                       style={styles.commentAuthorPic}
                     />
-                  </View>
+                  </TouchableOpacity>
                   <View style={{ flex: 1, gap: 6 }}>
                     <View style={styles.commentHeader}>
-                      <Text style={{ fontSize: 16 }}>{comment.authorName}</Text>
+                      <Text style={{ fontSize: 16 }}>
+                        {comment.authorInfo.displayName}
+                      </Text>
                       <Text style={{ fontSize: 16, color: "#7B7B7B" }}>
                         {new Date(comment.timestamp * 1000).toLocaleString()}
                       </Text>
@@ -249,7 +239,7 @@ function PostDetailScreen(props) {
                       {comment.commentPics.map((pic, index) => (
                         <Image
                           key={index}
-                          source={{ uri: pic }}
+                          source={pic}
                           style={{ width: 120, height: 120, borderRadius: 4 }}
                         />
                       ))}

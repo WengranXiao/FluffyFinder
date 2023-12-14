@@ -13,7 +13,7 @@ const ImageSwiper = ({ images }) => {
       {images.length ? (
         images.map((image, index) => (
           <View key={index} style={styles.slide}>
-            <Image source={{ uri: image }} style={styles.image} />
+            <Image source={image} style={styles.image} />
           </View>
         ))
       ) : (
