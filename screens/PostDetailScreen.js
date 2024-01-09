@@ -260,12 +260,15 @@ function PostDetailScreen(props) {
             )}
           </View>
         </ScrollView>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("CreateComment", { key })}
-          style={styles.commentButton}
-        >
-          <Icon name="comment" type="material-community" color="#fff" />
-        </TouchableOpacity>
+
+        {!selectedPost.resolved && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateComment", { key })}
+            style={styles.commentButton}
+          >
+            <Icon name="comment" type="material-community" color="#fff" />
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
