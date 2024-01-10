@@ -56,7 +56,7 @@ const FilterOverlay = ({ search, setSearch, setSortedPosts }) => {
   };
 
   handleReset = () => {
-    setSortedPosts(posts.sort((a, b) => b.postTime - a.postTime));
+    setSortedPosts(null);
     setStartTime(oneMonthAgo.getTime() / 1000);
     setEndTime(new Date().getTime() / 1000);
     setSelectedSpecies("All");

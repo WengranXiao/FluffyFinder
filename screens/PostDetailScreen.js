@@ -214,6 +214,7 @@ function PostDetailScreen(props) {
                 {`Comments (${postComments && postComments.length})`}
               </Text>
             </View>
+
             {postComments.length ? (
               postComments.map((comment, index) => (
                 <View key={index} style={styles.commentSection}>
@@ -370,6 +371,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     paddingHorizontal: "5%",
     boxSizing: "border-box",
+    marginBottom: 60,
   },
   commentSection: {
     flex: 1,
