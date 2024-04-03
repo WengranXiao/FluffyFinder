@@ -16,12 +16,12 @@ FluffyFinder aims to help users publish and search for information regarding los
 
 - **User Profiles**: Users can create profiles to manage their posts and interactions, enhancing trust and community involvement.
 
- <img width="250" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/bfe5fee6-0892-4232-998b-5df91a2d85de">
+- <img width="250" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/bfe5fee6-0892-4232-998b-5df91a2d85de">
 
 - **Comments and Communication**: The app facilitates real-time communication through comments on posts, allowing users to share information and tips.
 - **Advanced Filtering**: Users can filter posts by pet type, location, and date, making it easier to find specific pets.
 
- <img width="250" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/d2316897-2085-496b-a8d7-42473a0ffd26">
+- <img width="250" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/d2316897-2085-496b-a8d7-42473a0ffd26">
 
 ## Getting Started
 
