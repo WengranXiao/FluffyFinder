@@ -12,7 +12,7 @@ FluffyFinder aims to help users publish and search for information regarding los
 
 - **Interactive Map**: The map view shows where pets have been lost or found, helping to pinpoint search areas.
 
- <img width="250" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/946c5b8b-8f2d-46ff-8d7c-1e6a2e1b2848">
+- <img width="250" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/946c5b8b-8f2d-46ff-8d7c-1e6a2e1b2848">
 
 - **User Profiles**: Users can create profiles to manage their posts and interactions, enhancing trust and community involvement.
 
