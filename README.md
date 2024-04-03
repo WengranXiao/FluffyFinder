@@ -7,8 +7,8 @@ FluffyFinder aims to help users publish and search for information regarding los
 ## Key Features
 
 - **Lost and Found Pet Posts**: Users can create and view posts about lost and found pets, complete with photos and detailed descriptions.
-  <img width="300" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/5c3c1fbb-50a1-4fe2-a319-3b3801e68331">
 
+<img width="300" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/5c3c1fbb-50a1-4fe2-a319-3b3801e68331">
 - **Interactive Map**: The map view shows where pets have been lost or found, helping to pinpoint search areas.
 - **User Profiles**: Users can create profiles to manage their posts and interactions, enhancing trust and community involvement.
 - **Comments and Communication**: The app facilitates real-time communication through comments on posts, allowing users to share information and tips.
