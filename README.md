@@ -8,13 +8,20 @@ FluffyFinder aims to help users publish and search for information regarding los
 
 - **Lost and Found Pet Posts**: Users can create and view posts about lost and found pets, complete with photos and detailed descriptions.
 
-<img width="400" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/34efef86-9498-47bd-a95d-cd067fc50d8e">
-
+<img width="500" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/969b943c-2692-4dc1-9ff7-0923da0c571a">
 
 - **Interactive Map**: The map view shows where pets have been lost or found, helping to pinpoint search areas.
+
+<img width="300" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/946c5b8b-8f2d-46ff-8d7c-1e6a2e1b2848">
+
 - **User Profiles**: Users can create profiles to manage their posts and interactions, enhancing trust and community involvement.
+
+<img width="300" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/bfe5fee6-0892-4232-998b-5df91a2d85de">
+
 - **Comments and Communication**: The app facilitates real-time communication through comments on posts, allowing users to share information and tips.
 - **Advanced Filtering**: Users can filter posts by pet type, location, and date, making it easier to find specific pets.
+
+<img width="300" alt="image" src="https://github.com/SI669-classroom/si-669-final-project-fluffyfinder/assets/112583498/d2316897-2085-496b-a8d7-42473a0ffd26">
 
 ## Getting Started
 
